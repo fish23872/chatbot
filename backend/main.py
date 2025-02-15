@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio
 import socketio
+import uvicorn
 
 app = FastAPI()
 sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins="*") 
@@ -25,9 +27,12 @@ async def disconnect(sid):
     print(f"Client disconnected: {sid}") # prints when there is a disconnection
 @sio.event
 async def chat_message(sid, data):
-    print(f"Message from {sid}: {data}")
-    await sio.emit("chat_message", data)  # return the message (testing)
+    try:
+        print(f"Message from {sid}: {data}")
+        await sio.emit("chat_message", "You said: "+ data)
+        # return the message (testing)
+    except asyncio.TimeoutError as e: # handling timeout errors
+            print(f"Error: {e}")
     
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app_asgi, host="0.0.0.0", port=8000)
