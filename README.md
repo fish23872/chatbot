@@ -7,7 +7,12 @@ To get started with the project, install the necessary dependencies by running t
 ## Linux / Mac
 
 ```sh
-python3 -m pip install -r pyreq.txt && yarn install
+pipx install fastapi && pipx install uvicorn && pip install python-socketio
+```
+then
+
+```sh
+yarn install
 ```
 
 ## Windows
