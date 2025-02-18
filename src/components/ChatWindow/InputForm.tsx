@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import socket from "../utils/socket";
+import Button from "../Button/Button";
+import socket from "../../utils/socket";
 
 interface InputFormProps {
   onSendMessage: (message: string) => void;
@@ -23,21 +24,17 @@ const InputForm: React.FC<InputFormProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="flex mt-4 mb-2 w-[80%] mr-auto">
+    <div className="flex mt-4 mb-2 w-[80%] mr-auto space-x-4">
       <input
         type="text"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
-        className="flex-1 p-2 border placeholder:text-white rounded-l-lg"
+        className="flex-1 p-2 border placeholder:text-white rounded-lg"
         placeholder="Type a message..."
         onKeyDown={handleKeyDown}
+        autoFocus
       />
-      <button
-        onClick={handleSend}
-        className="p-2 px-12 bg-red-600 rounded-r-lg"
-      >
-        Send
-      </button>
+      <Button buttonText="Send" onClick={handleSend}></Button>
     </div>
   );
 };
