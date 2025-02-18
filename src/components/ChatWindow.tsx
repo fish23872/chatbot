@@ -30,7 +30,7 @@ const ChatWindow: React.FC = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 my-4 rounded-lg min-h-12 flex items-center max-w-md w-[50%] ${
+            className={`p-2 my-4 rounded-lg min-h-12 flex items-center max-w-md w-[50%] shadow-lg ${
               msg.isUser
                 ? "bg-green-600 self-end mr-auto"
                 : "bg-blue-950 self-start ml-auto"

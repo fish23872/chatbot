@@ -15,6 +15,12 @@ const InputForm: React.FC<InputFormProps> = ({ onSendMessage }) => {
       setInputText(""); // clearing the text
     }
   };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default behavior (new line)
+      handleSend(); // trigger the send message function
+    }
+  };
 
   return (
     <div className="flex mt-4 mb-2 w-[80%] mr-auto">
@@ -24,6 +30,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSendMessage }) => {
         onChange={(e) => setInputText(e.target.value)}
         className="flex-1 p-2 border placeholder:text-white rounded-l-lg"
         placeholder="Type a message..."
+        onKeyDown={handleKeyDown}
       />
       <button
         onClick={handleSend}
