@@ -1,7 +1,7 @@
 ## Getting Started
 
-To get started with the project, install the necessary dependencies by running the appropriate command for your operating system:
-
+To get started with the project, install the necessary dependencies by running the appropriate command for the operating system:
+(This is for me)
 ## Linux / Mac
 
 ```sh
@@ -48,7 +48,6 @@ The project uses the following technologies:
 ### NLP libraries - Python: 
 - Not implemented yet.
 
-
 # Features and Functionality (WIP)
 
 ### User Interaction
@@ -61,13 +60,9 @@ The project uses the following technologies:
 
 ### Conversational AI
 -	The bot can assist in troubleshooting, product recommendations, or answering general inquiries.
--    The bot is able to hold basic conversation with the customers. 
+-   The bot is able to hold basic conversation with the customers. 
 
 ### Escalation to Human Agents
 -	If the bot cannot resolve a customer’s issue, it can escalate the conversation to a human agent for further support.
 -   There will be a notification for human agents when escalating
 -    The conversation with the human agents will be real-time
-
-## User Stories (WIP)
-
-## DB Schema (WIP)
