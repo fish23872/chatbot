@@ -9,6 +9,8 @@ lerna-debug.log*
 
 node_modules
 __pychache__
+*.pyc
+*.pyo
 dist
 dist-ssr
 *.local
@@ -23,3 +25,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.swp
+
+# Ignore Rasa models
+/models/
+.rasa/
+
+# Ignore credentials
+credentials.yml
