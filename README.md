@@ -5,23 +5,19 @@ To get started with the project, install the necessary dependencies by running t
 ## Linux / Mac
 
 ```sh
-pipx install fastapi && pipx install uvicorn && pip install python-socketio
-```
-then
-
-```sh
-yarn install
+pipx install fastapi && pipx install uvicorn && pip install python-socketio && yarn install
 ```
 
 ## Windows
 
 ```sh
-pip install -r pyreq.txt; yarn install
+pip install fastapi && pip install uvicorn && pip install python-socketio
 ```
 # To run the application:
 
 ```sh
-uvicorn backend.main:app_asgi --host 0.0.0.0 --port 8000
+cd backend
+uvicorn main:app_asgi --host 0.0.0.0 --port 8000
 ```
 ```sh
 yarn run dev
@@ -38,15 +34,16 @@ The project uses the following technologies:
 - **Socket.IO (React Client)**: Enables real-time, bi-directional communication between the client (React app) and the backend server, necessary for escalating to human agents.
 
 ### Backend - Python
-- **FastAPI**: Python framework for back-end side (python).
+- **FastAPI**: Python framework for back-end side (python). https://fastapi.tiangolo.com/
 - **Socket.IO (Python Server)**: Used to handle WebSocket connections and allow real-time communication between the client and the server (python).
-- **Uvicorn**: A server used for the real-time hosting (python).
+- **Uvicorn**: A server used for the real-time hosting (python). https://www.uvicorn.org/
 
 ### Database: 
 - Not implemented yet.
 
 ### NLP libraries - Python: 
-- Not implemented yet.
+- **spaCy**: Industrial-Strength Natural Language Processing https://spacy.io/
+- **Rasa**: Provides flexible conversational AI software https://rasa.com/
 
 # Features and Functionality (WIP)
 
