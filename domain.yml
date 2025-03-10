@@ -8,11 +8,29 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
+  - ask_product_details
+
+entities:
+  - phone_model
+
+slots:
+  phone_model:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: phone_model
+        not_found_value: "unknown"
 
 actions:
   - action_process_message
+  - action_ask_product_details
 
 responses:
+
+  utter_product_details:
+    - text: "You're asking about the {phone_model}. Right now, I don't have details on it, but I'll learn more soon!"
+
   utter_greet:
   - text: "Hey! How are you?"
 
@@ -31,6 +49,10 @@ responses:
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
+
+synonyms:
+  "S22":
+    - "Samsung Galaxy S22"
 
 session_config:
   session_expiration_time: 60

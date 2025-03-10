@@ -1,6 +1,52 @@
 version: "3.1"
 
 nlu:
+- regex: phone_model
+  examples: |
+    - iPhone 13
+    - iPhone 13 Pro
+    - iPhone 13 Pro Max
+    - iPhone SE
+    - iPhone 12 mini
+    - Samsung Galaxy S20(\s*FE)?
+    - Samsung Galaxy S22(\s*FE)?
+    - Samsung Galaxy S21 Ultra
+    - OnePlus 9 Pro
+    - OnePlus Nord
+    - Xiaomi Redmi Note (\d+)
+    - Xiaomi Mi (\d+)
+    - Xiaomi Redmi Note 10 Pro
+    - Xiaomi Mi 11
+    - Xiaomi Mi 10 Pro
+    - Huawei P40 Pro
+    - Google Pixel 6
+    - Samsung Galaxy S10
+    - Samsung Galaxy S10e
+    - Samsung Galaxy S22
+    - S22
+
+- intent: ask_product_details
+  examples: |
+    - Tell me about the [Xiaomi Redmi Note 10](phone_model)
+    - Tell me about [Samsung Galaxy S20FE](phone_model)
+    - Tell me about [Samsung Galaxy S20 FE](phone_model)
+    - Tell me about [iPhone 13](phone_model)
+    - Can you tell me about [Xiaomi Mi 11](phone_model)?
+    - What is the [Samsung Galaxy S22 FE](phone_model)?
+    - I want to know about [Samsung Galaxy S22FE](phone_model)
+    - I want to know more about [Samsung Galaxy S22](phone_model)
+    - What is the [OnePlus 9 Pro](phone_model)?
+    - What is the [S22](phone_model)?
+    - What is the [Samsung Galaxy S22](phone_model)?
+    - Tell me about the [S22 Ultra](phone_model)
+    - Do you have details on the [Google Pixel 6](phone_model)?
+    - Show me the specs for [iPhone 13 Pro](phone_model)
+    - I'm interested in the [Samsung Galaxy S21 Ultra](phone_model)
+    - What do you know about the [Huawei P40 Pro](phone_model)?
+    - What can you tell me about the [Samsung Galaxy S22 Ultra](phone_model)?
+    - I want information about the [S20 FE](phone_model)
+    - Please tell me about the [Samsung Galaxy S20 FE](phone_model)
+
 - intent: greet
   examples: |
     - hey
