@@ -25,34 +25,49 @@ slots:
 actions:
   - action_process_message
   - action_ask_product_details
+  - action_normalize_phone_model
 
 responses:
 
   utter_product_details:
-    - text: "You're asking about the {phone_model}. Right now, I don't have details on it, but I'll learn more soon!"
+    - text: "Here is a link to the general information about {phone_model}: [Product details](<link_to_{phone_model}_details>)"
 
   utter_greet:
-  - text: "Hey! How are you?"
-
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
+    - text: "Hey! How are you?"
+    - text: "Hello! How's it going?"
+    - text: "Hi there! How do you feel today?"
+    - text: "Hey! How can I be of assistance?"
+    - text: "Hello!"
+    - text: "Hey there!"
 
   utter_did_that_help:
-  - text: "Did that help you?"
+    - text: "Did that help you?"
+    - text: "Was that useful for you?"
+    - text: "Let me know if that answered your question!"
+    - text: "Did you find that information helpful?"
 
   utter_happy:
-  - text: "Great, carry on!"
+    - text: "Great, carry on!"
+    - text: "Awesome! Keep it up!"
+    - text: "That's fantastic!"
+    - text: "Glad to hear that!"
 
   utter_goodbye:
-  - text: "Bye"
+    - text: "Bye"
+    - text: "Goodbye! Have a great day!"
+    - text: "See you later!"
+    - text: "Take care!"
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+    - text: "I am a bot."
+    - text: "I'm just a virtual assistant, here to help!"
+    - text: "Yep, I'm an AI-powered bot!"
+    - text: "I’m an automated assistant, happy to assist you!"
 
-synonyms:
-  "S22":
-    - "Samsung Galaxy S22"
+  utter_default:
+    - text: "I don't understand. Can you rephrase?"
+    - text: "Sorry, I didn't get that. Could you clarify?"
+    - text: "I'm not sure I understand. Can you explain differently?"
 
 session_config:
   session_expiration_time: 60

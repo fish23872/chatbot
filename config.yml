@@ -24,8 +24,9 @@ pipeline:
   - name: "EntitySynonymMapper"  # (Optional) For entity synonym recognition
   - name: "ResponseSelector"  # (Optional) If you plan to use Rasa's response selection for FAQs or predefined answers
   
-  - name: "FallbackClassifier"  # (Optional) To handle fallback when the model is unsure
-    threshold: 0.3  # Threshold for fallback classification (adjust as needed)
+  - name: FallbackClassifier
+    threshold: 0.2  # Az intent felismerés minimális biztonsági küszöbe
+    ambiguity_threshold: 0.1  # Threshold for fallback classification (adjust as needed)
 
 # Policies define the conversation flow, allowing the assistant to choose what action to take.
 policies:
