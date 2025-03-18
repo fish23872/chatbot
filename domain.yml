@@ -1,74 +1,107 @@
-version: "3.1"
-
+version: '3.1'
 intents:
-  - greet
-  - goodbye
-  - affirm
-  - deny
-  - mood_great
-  - mood_unhappy
-  - bot_challenge
-  - ask_product_details
-
+- affirm
+- ask_availability
+- ask_price
+- ask_product_details
+- bot_challenge
+- compare_models
+- deny
+- escalate_to_human
+- goodbye
+- greet
+- thank
 entities:
-  - phone_model
-
+- phone_model
 slots:
   phone_model:
     type: text
     influence_conversation: false
     mappings:
-      - type: from_entity
-        entity: phone_model
-        not_found_value: "unknown"
-
+    - type: from_entity
+      entity: phone_model
+      not_found_value: unknown
 actions:
+  - action_normalize_phone_model
+  - action_ask_price
+  - utter_ask_to_purchase
+  - utter_redirect_for_purchase
+  - utter_greet
+  - utter_ask_availability
+  - utter_default
+  - utter_ask_price
+  - utter_did_that_help
+  - utter_compare_models
+  - utter_ask_user_question
+  - utter_ask_what_to_help
+  - utter_ask_to_purchase_either
+  - utter_accept_denial_phone_purchase
+  - utter_phone_model_not_recognized
+  - utter_ask_for_phone_model_again
+  - utter_english_only
   - action_process_message
   - action_ask_product_details
-  - action_normalize_phone_model
-
+  - action_escalate_to_human
+  - action_get_discounted_models
+  - action_check_stock
+  - action_slot_reset
 responses:
-
+  utter_ask_to_purchase_either:
+  - text: Would you like to purchase any one of them?
+  utter_ask_what_to_help:
+  - text: What can I assist you with?
+  utter_ask_user_question:
+  - text: Hello! Can I help you? I am designed for "webshop" which sells mobile phones.
   utter_product_details:
-    - text: "Here is a link to the general information about {phone_model}: [Product details](<link_to_{phone_model}_details>)"
-
+  - text: 'Here is a link to the general information about {phone_model}: [Product details](<link_to_{phone_model}_details>)'
+  utter_compare_models:
+  - text: 'The comparison between {phone_comparison}: [Comparison details](<link_to_{phone_comparison}_comparison>)'
+  utter_ask_availability:
+  - text: Checking availability for {phone_model}. Let me get back to you.
+  utter_ask_price:
+  - text: The price of {phone_model} is available. Let me check for you.
+  utter_phone_model_not_recognized:
+    - text: "I'm sorry, I couldn't recognize that phone model."
+  utter_ask_for_phone_model_again:
+    - text: "Could you please specify the phone model again? For example, 'iPhone 14' or 'Samsung Galaxy S23'."
+  utter_escalate_to_human:
+  - text: I am escalating your request to a human agent. Please hold on for a moment.
   utter_greet:
-    - text: "Hey! How are you?"
-    - text: "Hello! How's it going?"
-    - text: "Hi there! How do you feel today?"
-    - text: "Hey! How can I be of assistance?"
-    - text: "Hello!"
-    - text: "Hey there!"
-
+  - text: Hey! How are you?
+  - text: Hello! How's it going?
+  - text: Hi there! How do you feel today?
+  - text: Hey! How can I be of assistance?
+  - text: Hello!
+  - text: Hey there!
   utter_did_that_help:
-    - text: "Did that help you?"
-    - text: "Was that useful for you?"
-    - text: "Let me know if that answered your question!"
-    - text: "Did you find that information helpful?"
-
-  utter_happy:
-    - text: "Great, carry on!"
-    - text: "Awesome! Keep it up!"
-    - text: "That's fantastic!"
-    - text: "Glad to hear that!"
-
+  - text: Did that help you?
+  - text: Was that useful for you?
+  - text: Let me know if that answered your question!
+  - text: Did you find that information helpful?
   utter_goodbye:
-    - text: "Bye"
-    - text: "Goodbye! Have a great day!"
-    - text: "See you later!"
-    - text: "Take care!"
-
+  - text: Bye
+  - text: Goodbye! Have a great day!
+  - text: See you later!
+  - text: Take care!
+  utter_accept_denial:
+  - text: Ok, let's start over
+  utter_accept_denial_phone_purchase:
+  - text: OK, if you want to purchase a different one, just ask!
   utter_iamabot:
-    - text: "I am a bot."
-    - text: "I'm just a virtual assistant, here to help!"
-    - text: "Yep, I'm an AI-powered bot!"
-    - text: "I’m an automated assistant, happy to assist you!"
-
+  - text: I am a bot.
+  - text: I'm just a virtual assistant, here to help!
+  - text: Yep, I'm an AI-powered bot!
+  - text: I’m an automated assistant, happy to assist you!
   utter_default:
-    - text: "I don't understand. Can you rephrase?"
-    - text: "Sorry, I didn't get that. Could you clarify?"
-    - text: "I'm not sure I understand. Can you explain differently?"
-
+  - text: I don't understand. Can you rephrase?
+  - text: Sorry, I didn't get that. Could you clarify?
+  - text: I'm not sure I understand. Can you explain differently?
+  utter_ask_to_purchase:
+  - text: Would you like to purchase one?
+  utter_redirect_for_purchase:
+  - text: Great! I'll redirect you to our purchase page.
+  utter_english_only:
+  - text: "I am an assistant for this webshop. I only understand and converse in English. Please use English as your language."
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

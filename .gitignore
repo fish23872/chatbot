@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 __pychache__
+.pytest_cache/
 *.pyc
 *.pyo
 dist

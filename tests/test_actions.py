@@ -11,7 +11,7 @@ from actions.actions import ActionNormalizePhoneModel
     ("redmi note 10", "Xiaomi Redmi Note 10"),
     ("iPhone 13 Pro Max", "iPhone 13 Pro Max"),
     ("iphone 14 pro", "iPhone 14 Pro"),
-    ("random model", "random model"),  # Should return unchanged if not in the rules
+    ("random model", None),  # Should return None if not in the rules
 ])
 def test_normalize_model(input_model, expected_output):
     action = ActionNormalizePhoneModel()
