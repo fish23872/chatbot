@@ -43,7 +43,7 @@ The project uses the following technologies:
 
 ### NLP libraries - Python: 
 - **spaCy**: Industrial-Strength Natural Language Processing https://spacy.io/
-- **Rasa**: Provides flexible conversational AI software https://rasa.com/
+- **Rasa Open Source**: Provides flexible conversational AI software https://rasa.com/
 
 # Features and Functionality (WIP)
 

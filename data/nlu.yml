@@ -1,6 +1,97 @@
 version: "3.1"
-
 nlu:
+- intent: ask_availability
+  examples: |
+    - Is the [Samsung Galaxy S25](phone_model) available?
+    - Do you have the [iPhone 13](phone_model) in stock?
+    - Is the [OnePlus 9 Pro](phone_model) available?
+    - Can I get the [Xiaomi Mi 11](phone_model)?
+    - Do you have any [iPhone 13](phone_model) in stock?
+    - Are there any [Samsung Galaxy S21 Ultra](phone_model) available?
+    - Do you have any of the [OnePlus 10](phone_model)?
+    - check stock for [iPhone 15 pro max](phone_model)
+    - Do you have any of the [iPhone 15 pro max](phone_model)?
+- intent: ask_price
+  examples: |
+    - How much is the [iPhone 13](phone_model)?
+    - What’s the price of the [Samsung Galaxy S21 Ultra](phone_model)?
+    - How much does the [OnePlus 9 Pro](phone_model) cost?
+    - Please Tell me the price of the [Xiaomi Mi 10 Pro](phone_model)
+    - What is the cost for the [s23](phone_model)?
+    - price??? [s24](phone_model)
+    - cost? [iphone 13](phone_model)
+    - how much is it?
+    - what is the price for the [s22](phone_model)?
+- intent: ask_product_details
+  examples: |
+    - Tell me about the [Xiaomi Redmi Note 10](phone_model)
+    - Can you tell me about [Xiaomi Mi 11](phone_model)?
+    - What is the [Samsung Galaxy S22 FE](phone_model)?
+    - I want to know about [Samsung Galaxy S22FE](phone_model)
+    - What is the [Samsung Galaxy S22](phone_model)?
+    - Tell me about the [S22 Ultra](phone_model)
+    - Please tell me about the [Samsung Galaxy S20 FE](phone_model)
+- intent: ask_for_discounts
+  examples: |
+    - Are there any phones on sale?
+    - Which models have discounts?
+    - Do you have any discounted phones?
+    - Show me phones with discounts.
+    - What phones are on sale right now?
+    - Are there any deals on phones?
+    - Can you show me discounted models?
+    - Which phones are currently discounted?
+    - Are there any special offers on phones?
+    - Do you have any sales on mobile phones?
+- intent: escalate_to_human
+  examples: |
+    - I need to speak to a human
+    - Escalate to human
+    - Can I talk to an agent?
+    - I want to talk to a person
+    - lemme talk to a person
+    - Let me talk to a human
+    - please human agent
+- intent: thank
+  examples: |
+    - thank you so much
+    - thx
+    - Awesome, thanks!
+    - thanks mate
+    - thank you
+    - ty
+    - tyyy
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+    - Nah, I would not like to be added to the list
+    - nope
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
 - intent: greet
   examples: |
     - hey
@@ -16,76 +107,24 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
-
-- intent: goodbye
-  examples: |
-    - cu
-    - good by
-    - cee you later
-    - good night
-    - bye
-    - goodbye
-    - have a nice day
-    - see you around
-    - bye bye
-    - see you later
-
-- intent: affirm
-  examples: |
-    - yes
-    - y
-    - indeed
-    - of course
-    - that sounds good
-    - correct
-
-- intent: deny
-  examples: |
-    - no
-    - n
-    - never
-    - I don't think so
-    - don't like that
-    - no way
-    - not really
-
-- intent: mood_great
-  examples: |
-    - perfect
-    - great
-    - amazing
-    - feeling like a king
-    - wonderful
-    - I am feeling very good
-    - I am great
-    - I am amazing
-    - I am going to save the world
-    - super stoked
-    - extremely good
-    - so so perfect
-    - so good
-    - so perfect
-
-- intent: mood_unhappy
-  examples: |
-    - my day was horrible
-    - I am sad
-    - I don't feel very well
-    - I am disappointed
-    - super sad
-    - I'm so sad
-    - sad
-    - very sad
-    - unhappy
-    - not good
-    - not very good
-    - extremly sad
-    - so saad
-    - so sad
-
+    - yo
+    - HEY
+    - heyy
+    - Hey!!!
+    - hallo?
 - intent: bot_challenge
   examples: |
     - are you a bot?
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+- intent: ask_multilingual_support
+  examples: |
+    - Can you help me in Spanish?
+    - Do you support French?
+    - Hablas español?
+    - Parlez-vous français?
+    - 你会说中文吗？
+    - ¿Puedes ayudarme en español?
+    - Sprechen Sie Deutsch?
+    - Você fala português?
