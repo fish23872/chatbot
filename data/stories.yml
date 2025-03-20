@@ -1,7 +1,7 @@
 version: "3.1"
 
 stories:
-- story: buying a phone
+- story: buying a valid phone model
   steps:
   - intent: ask_price
     entities:
@@ -12,9 +12,32 @@ stories:
   - slot_was_set:
       - phone_model
   - action: action_ask_price
+  - slot_was_set: 
+      - is_valid_phone: True
   - action: utter_ask_to_purchase
   - intent: affirm
   - action: utter_redirect_for_purchase
+  - action: action_restart
+
+- story: invalid phone purchase
+  steps:
+  - intent: ask_price
+    entities:
+      - phone_model
+  - slot_was_set:
+      - phone_model
+  - action: action_normalize_phone_model
+  - slot_was_set:
+      - phone_model
+  - action: action_ask_price
+  - slot_was_set:
+      - is_valid_phone: True
+  - action: utter_invalid_phone_model
+
+- story: handle invalid phone model
+  steps:
+  - checkpoint: invalid_phone_model
+  - action: utter_invalid_phone_model
   - action: action_restart
 
 - story: buying a phone denied

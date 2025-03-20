@@ -4,70 +4,142 @@ from rasa_sdk.events import SlotSet, AllSlotsReset
 from rasa_sdk.executor import CollectingDispatcher
 import random
 
-class ActionSlotReset(Action): 	
+phone_data = {
+    "samsung galaxy s25": {
+        "normalized_name": "Samsung Galaxy S25",
+        "available": True,
+        "quantity": 10,
+        "price": 1000,
+        "discount": "20% off",
+        "review_score": 4.7,
+    },
+    "iphone 13 pro max": {
+        "normalized_name": "iPhone 13 Pro Max",
+        "available": True,
+        "quantity": 5,
+        "price": 1200,
+        "discount": "15% off",
+        "review_score": 4.8,
+    },
+    "xiaomi mi 11": {
+        "normalized_name": "Xiaomi Mi 11",
+        "available": True,
+        "quantity": 3,
+        "price": 699,
+        "discount": "10% off",
+        "review_score": 4.3,
+    },
+    "oneplus 9 pro": {
+        "normalized_name": "OnePlus 9 Pro",
+        "available": False,
+        "quantity": 0,
+        "price": 899,
+        "discount": None,
+        "review_score": 4.5,
+    },
+    "iphone 14 pro": {
+        "normalized_name": "iPhone 14 Pro",
+        "available": True,
+        "quantity": 2,
+        "price": 999,
+        "discount": None,
+        "review_score": 4.6,
+    },
+}
+class BasePhoneAction(Action):
+    def name(self):
+        return "action_base"
+    def get_phone_model(self, tracker: Tracker):
+        """Retrieve and normalize the phone_model slot."""
+        phone_model = tracker.get_slot("phone_model")
+        if phone_model:
+            return phone_model.lower()
+        return None
+
+    def get_phone_data(self, phone_model: str):
+        """Retrieve phone data from the phone_data dictionary."""
+        if phone_model in phone_data:
+            return phone_data[phone_model]
+        return None
+
+    def generate_response(self, phone_data: dict):
+        """Generate a response based on the phone data."""
+        raise NotImplementedError("Subclasses must implement this method.")
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        phone_model = self.get_phone_model(tracker)
+        if phone_model:
+            data = self.get_phone_data(phone_model)
+            if data:
+                response = self.generate_response(data)
+            else:
+                response = f"Sorry, we don't have information for the {phone_model.title()}."
+        else:
+            response = "Please specify the phone model you're asking about."
+
+        dispatcher.utter_message(text=response)
+        return []
+
+class ActionGetReviews(BasePhoneAction):
+    def name(self):
+        return "action_get_reviews"
+
+    def generate_response(self, phone_data: dict):
+        review_score = phone_data.get("review_score")
+        return f"The {phone_data['normalized_name']} has a review score of {review_score}/5."
+
+class ActionCheckStock(BasePhoneAction):
     def name(self):
         return "action_check_stock"
 
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
-        # Simulated stock data (TODO replace with a database or API call later)
-        stock_data = {
-            "samsung Galaxy s25": {"available": True, "quantity": 10},
-            "iphone 13 pro max": {"available": True, "quantity": 5},
-            "oneplus 9 pro": {"available": False, "quantity": 0},
-            "xiaomi mi 11": {"available": True, "quantity": 3},
-            "samsung galaxy s21 ultra": {"available": False, "quantity": 0},
-            "oneplus 10": {"available": True, "quantity": 7},
-            "iphone 15": {"available": True, "quantity": 15},
-        }
-        phone_model = next(tracker.get_latest_entity_values("phone_model"), None)
-
-        if phone_model:
-            phone_model = phone_model.lower()
-            if phone_model in stock_data:
-                stock_info = stock_data[phone_model]
-                if stock_info["available"]:
-                    response = f"Yes, the {phone_model.title()} is available. We have {stock_info['quantity']} in stock."
-                else:
-                    response = f"Sorry, the {phone_model.title()} is currently out of stock."
-            else:
-                response = f"Sorry, we don't carry the {phone_model.title()}."
+    def generate_response(self, phone_data: dict):
+        if phone_data["available"]:
+            return f"Yes, the {phone_data['normalized_name']} is available. We have {phone_data['quantity']} in stock."
         else:
-            response = "Please specify the phone model you're asking about."
-        dispatcher.utter_message(text=response)
+            return f"Sorry, the {phone_data['normalized_name']} is currently out of stock."
 
-        return []
-class ActionGetDiscountedModels(Action):
+class ActionGetDiscountedModels(BasePhoneAction):
     def name(self):
         return "action_get_discounted_models"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
-        # List of discounted phone models (TODO replace with actual data from a database)
         discounted_models = [
-            {"model": "Samsung Galaxy S22", "discount": "20% off", "price": "$799"},
-            {"model": "iPhone 13", "discount": "15% off", "price": "$849"},
-            {"model": "Xiaomi Mi 11", "discount": "10% off", "price": "$699"},
+            phone for phone in phone_data.values() if phone["discount"]
         ]
+
         if discounted_models:
             response = "Here are some phones currently on sale:\n"
             for phone in discounted_models:
-                response += f"- {phone['model']}: {phone['discount']}, now at {phone['price']}\n"
+                response += f"- {phone['normalized_name']}: {phone['discount']}, now at ${phone['price']}\n"
         else:
             response = "Sorry, there are no phones on sale at the moment."
+
         dispatcher.utter_message(text=response)
         return []
-class ActionAskPrice(Action):
+class ActionAskPrice(BasePhoneAction):
     def name(self):
         return "action_ask_price"
 
-    def run(self, dispatcher, tracker, domain):
-        phone_model = tracker.get_slot("phone_model")
-        if phone_model:
-            # Simulate fetching a random price between $500 and $1500
-            price = random.randint(500, 1500)
-            dispatcher.utter_message(text=f"The price of {phone_model} is ${price}.")
-            return []
-        return []
+    def generate_response(self, phone_data: dict):
+        price = phone_data.get("price")
+        if price is None:
+            return "Sorry, we don't have pricing information for this phone yet.", False
+        return f"The price of {phone_data['normalized_name']} is ${price}.", True
 
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        phone_model = self.get_phone_model(tracker)
+        if phone_model:
+            data = self.get_phone_data(phone_model)
+            if data:
+                response, is_valid = self.generate_response(data)
+                dispatcher.utter_message(text=response)
+                return [SlotSet("is_valid_phone", is_valid)]
+            else:
+                dispatcher.utter_message(text=f"Sorry, we don't carry the {phone_model.title()}.")
+                return [SlotSet("is_valid_phone", False)]
+        else:
+            dispatcher.utter_message(text="Please specify the phone model you're asking about.")
+            return [SlotSet("is_valid_phone", False)]
 class ActionEscalateToHuman(Action):
     def name(self):
         return "action_escalate_to_human"
@@ -132,4 +204,18 @@ class ActionNormalizePhoneModel(Action):
             if max_suffix:
                 result += " Max"
             return result  
+        
+            # OnePlus
+        oneplus_match = re.match(r"(oneplus|one plus|op)\s*(\d{1,2})(\s*(pro|t|r|ce|nord|ultra|5g))?(\s*(pro|t|r|ce|nord|ultra|5g))?$", model_lower)
+        if oneplus_match:
+            model_number = oneplus_match.group(2)
+            variant1 = oneplus_match.group(4)
+            variant2 = oneplus_match.group(6)
+            
+            result = f"OnePlus {model_number}"
+            if variant1:
+                result += f" {variant1.title()}"
+            if variant2:
+                result += f" {variant2.title()}"
+            return result
         return None

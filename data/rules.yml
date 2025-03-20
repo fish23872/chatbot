@@ -6,6 +6,8 @@ rules:
   steps:
     - intent: ask_product_details
     - action: action_normalize_phone_model
+    - slot_was_set:
+      - phone_model
     - action: utter_product_details
 
 - rule: Say goodbye anytime the user says goodbye
@@ -23,16 +25,12 @@ rules:
   - intent: nlu_fallback
   - action: utter_default
 
-- rule: Compare phone models
-  steps:
-    - intent: compare_models
-    - action: action_normalize_phone_model
-    - action: utter_compare_models
-
 - rule: Ask for phone availability
   steps:
     - intent: ask_availability
     - action: action_normalize_phone_model
+    - slot_was_set:
+      - phone_model
     - action: utter_ask_availability
 
 - rule: Escalate to human agents when asked 
@@ -60,3 +58,13 @@ rules:
   - slot_was_set: 
       - phone_model
   - action: action_check_stock
+
+- rule: Respond to review inquiries
+  steps:
+  - intent: ask_reviews
+    entities:
+      - phone_model
+  - action: action_normalize_phone_model
+  - slot_was_set:
+      - phone_model
+  - action: action_get_reviews

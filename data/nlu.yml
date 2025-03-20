@@ -1,5 +1,17 @@
 version: "3.1"
 nlu:
+- intent: ask_reviews
+  examples: |
+    - What do customers say about the [iPhone 13 Pro Max](phone_model)?
+    - How is the [Samsung Galaxy S25](phone_model) rated?
+    - What are the reviews for the [Xiaomi Mi 11](phone_model)?
+    - Tell me about the reviews for the [OnePlus 9 Pro](phone_model).
+    - How good is the [iPhone 14 Pro](phone_model)?
+    - What is the review score for the [Samsung Galaxy S25](phone_model)?
+    - Can you tell me the reviews for the [Xiaomi Mi 11](phone_model)?
+    - What is the customer feedback for the [OnePlus 9 Pro](phone_model)?
+    - How do customers rate the [iPhone 13 Pro Max](phone_model)?
+    - What is the rating for the [iPhone 14 Pro](phone_model)?
 - intent: ask_availability
   examples: |
     - Is the [Samsung Galaxy S25](phone_model) available?
@@ -16,12 +28,23 @@ nlu:
     - How much is the [iPhone 13](phone_model)?
     - What’s the price of the [Samsung Galaxy S21 Ultra](phone_model)?
     - How much does the [OnePlus 9 Pro](phone_model) cost?
-    - Please Tell me the price of the [Xiaomi Mi 10 Pro](phone_model)
+    - Please tell me the price of the [Xiaomi Mi 10 Pro](phone_model)
     - What is the cost for the [s23](phone_model)?
     - price??? [s24](phone_model)
     - cost? [iphone 13](phone_model)
     - how much is it?
     - what is the price for the [s22](phone_model)?
+    - Can you tell me the price of the [Xiaomi Mi 11](phone_model)?
+    - What’s the price for the [iPhone 14 Pro](phone_model)?
+    - How much is the [Samsung Galaxy S22 Ultra](phone_model)?
+    - Tell me the price of the [OnePlus 10T](phone_model).
+    - What’s the cost of the [Xiaomi Redmi Note 10](phone_model)?
+    - How much does the [iPhone 15 Pro Max](phone_model) cost?
+    - What’s the price tag on the [Samsung Galaxy S23](phone_model)?
+    - Can you give me the price for the [OnePlus 9R](phone_model)?
+    - How much is the [Xiaomi Mi 12](phone_model)?
+    - How much for the [s22](phone_model)?
+    - What’s the price of the [iPhone 13 Mini](phone_model)?
 - intent: ask_product_details
   examples: |
     - Tell me about the [Xiaomi Redmi Note 10](phone_model)

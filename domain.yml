@@ -2,10 +2,12 @@ version: '3.1'
 intents:
 - affirm
 - ask_availability
+- ask_for_discounts
+- ask_multilingual_support
 - ask_price
 - ask_product_details
+- ask_reviews
 - bot_challenge
-- compare_models
 - deny
 - escalate_to_human
 - goodbye
@@ -16,35 +18,43 @@ entities:
 slots:
   phone_model:
     type: text
-    influence_conversation: false
+    influence_conversation: true
     mappings:
     - type: from_entity
       entity: phone_model
       not_found_value: unknown
+  is_valid_phone:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
 actions:
-  - action_normalize_phone_model
-  - action_ask_price
-  - utter_ask_to_purchase
-  - utter_redirect_for_purchase
-  - utter_greet
-  - utter_ask_availability
-  - utter_default
-  - utter_ask_price
-  - utter_did_that_help
-  - utter_compare_models
-  - utter_ask_user_question
-  - utter_ask_what_to_help
-  - utter_ask_to_purchase_either
-  - utter_accept_denial_phone_purchase
-  - utter_phone_model_not_recognized
-  - utter_ask_for_phone_model_again
-  - utter_english_only
-  - action_process_message
-  - action_ask_product_details
-  - action_escalate_to_human
-  - action_get_discounted_models
-  - action_check_stock
-  - action_slot_reset
+- action_normalize_phone_model
+- action_ask_price
+- utter_ask_to_purchase
+- utter_redirect_for_purchase
+- utter_greet
+- utter_ask_availability
+- utter_default
+- utter_ask_price
+- utter_did_that_help
+- utter_compare_models
+- utter_ask_user_question
+- utter_ask_what_to_help
+- utter_ask_to_purchase_either
+- utter_accept_denial_phone_purchase
+- utter_phone_model_not_recognized
+- utter_ask_for_phone_model_again
+- utter_invalid_phone_model
+- utter_english_only
+- action_base
+- action_get_reviews
+- action_process_message
+- action_ask_product_details
+- action_escalate_to_human
+- action_get_discounted_models
+- action_check_stock
+- action_slot_reset
 responses:
   utter_ask_to_purchase_either:
   - text: Would you like to purchase any one of them?
@@ -61,9 +71,11 @@ responses:
   utter_ask_price:
   - text: The price of {phone_model} is available. Let me check for you.
   utter_phone_model_not_recognized:
-    - text: "I'm sorry, I couldn't recognize that phone model."
+  - text: I'm sorry, I couldn't recognize that phone model.
   utter_ask_for_phone_model_again:
-    - text: "Could you please specify the phone model again? For example, 'iPhone 14' or 'Samsung Galaxy S23'."
+  - text: Could you please specify the phone model again? For example, 'iPhone 14' or 'Samsung Galaxy S23'.
+  utter_invalid_phone_model:
+  - text: Sorry, we don't have information for this phone model.
   utter_escalate_to_human:
   - text: I am escalating your request to a human agent. Please hold on for a moment.
   utter_greet:
@@ -101,7 +113,7 @@ responses:
   utter_redirect_for_purchase:
   - text: Great! I'll redirect you to our purchase page.
   utter_english_only:
-  - text: "I am an assistant for this webshop. I only understand and converse in English. Please use English as your language."
+  - text: I am an assistant for this webshop. I only understand and converse in English. Please use English as your language.
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
