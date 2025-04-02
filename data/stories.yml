@@ -1,6 +1,24 @@
 version: "3.1"
 
 stories:
+- story: fallback counter 
+  steps:
+  - intent: nlu_fallback
+  - action: utter_default
+  - intent: nlu_fallback
+  - action: utter_default
+  - intent: nlu_fallback
+  - action: utter_offer_human_agent
+  - intent: affirm
+  - action: action_escalate_to_human
+  - action: action_restart
+
+- story: i want to buy a phone
+  steps: 
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - action: action_restart
+
 - story: buying a valid phone model
   steps:
   - intent: ask_price
@@ -14,7 +32,6 @@ stories:
   - action: action_ask_price
   - slot_was_set: 
       - is_valid_phone: True
-  - action: utter_ask_to_purchase
   - intent: affirm
   - action: utter_redirect_for_purchase
   - action: action_restart
@@ -31,13 +48,7 @@ stories:
       - phone_model
   - action: action_ask_price
   - slot_was_set:
-      - is_valid_phone: True
-  - action: utter_invalid_phone_model
-
-- story: handle invalid phone model
-  steps:
-  - checkpoint: invalid_phone_model
-  - action: utter_invalid_phone_model
+      - is_valid_phone: False
   - action: action_restart
 
 - story: buying a phone denied
@@ -72,3 +83,39 @@ stories:
   - action: utter_ask_what_to_help
   - action: action_restart
 
+- story: Ask for phone price without model
+  steps: 
+    - intent: ask_price
+      entities: []
+    - action: utter_out_of_scope_inquiry
+
+- story: Ask for phone availability without model
+  steps: 
+    - intent: ask_availability
+      entities: []
+    - action: utter_out_of_scope_inquiry
+
+- story: Ask for phone reviews without model
+  steps: 
+    - intent: ask_reviews
+      entities: []
+    - action: utter_out_of_scope_inquiry
+
+- story: handle no recognition for comparison
+  steps:
+    - intent: compare_phones
+      entities: []
+    - action: utter_ask_clarify_comparison
+
+- story: compare two phones successfully
+  steps:
+  - intent: compare_phones
+    entities:
+    - phone_model
+    - phone_model
+  - action: action_normalize_phone_models
+  - slot_was_set:
+    - phone_model
+  - slot_was_set:
+    - phone_model
+  - action: action_compare_phones_unused

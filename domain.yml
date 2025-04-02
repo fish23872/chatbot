@@ -8,13 +8,28 @@ intents:
 - ask_product_details
 - ask_reviews
 - bot_challenge
+- buy_phone
+- compare_phones
 - deny
 - escalate_to_human
 - goodbye
 - greet
+- provide_budget
+- provide_preferences
+- inform
+- compare_phones_form_starter
 - thank
+forms:
+  compare_phones_form:
+    required_slots:
+      - phone1
+      - phone2
 entities:
 - phone_model
+- is_valid_phone
+- amount
+- phone1
+- phone2
 slots:
   phone_model:
     type: text
@@ -28,7 +43,32 @@ slots:
     influence_conversation: true
     mappings:
     - type: custom
+  amount:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: custom
+  phone1:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: phone_model
+      intent: inform
+      conditions:
+      - active_loop: compare_phones_form
+      - requested_slot: phone1
+  phone2:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: phone_model
+      intent: inform
+      conditions:
+      - active_loop: compare_phones_form
+      - requested_slot: phone2
 actions:
+- action_normalize_phone_models
+- action_recommend_by_budget
 - action_normalize_phone_model
 - action_ask_price
 - utter_ask_to_purchase
@@ -44,10 +84,18 @@ actions:
 - utter_ask_to_purchase_either
 - utter_accept_denial_phone_purchase
 - utter_phone_model_not_recognized
-- utter_ask_for_phone_model_again
 - utter_invalid_phone_model
 - utter_english_only
+- utter_offer_human_agent
+- utter_out_of_scope_inquiry
+- utter_happy_to_help
 - action_base
+- validate_compare_phones_form
+- action_compare_phones
+- action_compare_phones_unused
+- utter_confirm_comparison
+- utter_ask_phone1
+- utter_ask_phone2
 - action_get_reviews
 - action_process_message
 - action_ask_product_details
@@ -56,6 +104,12 @@ actions:
 - action_check_stock
 - action_slot_reset
 responses:
+  utter_ask_phone1:
+  - text: "Please enter the first phone model you want to compare"
+  utter_ask_phone2:
+  - text: "Now please enter the second phone model to compare"
+  utter_confirm_comparison:
+  - text: "Comparing {phone1} vs {phone2}..."
   utter_ask_to_purchase_either:
   - text: Would you like to purchase any one of them?
   utter_ask_what_to_help:
@@ -66,14 +120,12 @@ responses:
   - text: 'Here is a link to the general information about {phone_model}: [Product details](<link_to_{phone_model}_details>)'
   utter_compare_models:
   - text: 'The comparison between {phone_comparison}: [Comparison details](<link_to_{phone_comparison}_comparison>)'
-  utter_ask_availability:
-  - text: Checking availability for {phone_model}. Let me get back to you.
-  utter_ask_price:
-  - text: The price of {phone_model} is available. Let me check for you.
+  utter_ask_for_budget:
+  - text: What is your budget?
+  utter_ask_clarify_comparison:
+  - text: Please give a valid name of phone models when comparing. Try "Samsung Galaxy S24" or "iPhone 13 Pro" instead.
   utter_phone_model_not_recognized:
   - text: I'm sorry, I couldn't recognize that phone model.
-  utter_ask_for_phone_model_again:
-  - text: Could you please specify the phone model again? For example, 'iPhone 14' or 'Samsung Galaxy S23'.
   utter_invalid_phone_model:
   - text: Sorry, we don't have information for this phone model.
   utter_escalate_to_human:
@@ -114,6 +166,12 @@ responses:
   - text: Great! I'll redirect you to our purchase page.
   utter_english_only:
   - text: I am an assistant for this webshop. I only understand and converse in English. Please use English as your language.
+  utter_out_of_scope_inquiry:
+  - text: Sorry, I specialize in mobile phones and can not find the phone model you're asking for. Please provide a valid phone model name when asking for a model.
+  utter_offer_human_agent:
+  - text: I see you're having trouble. Would you like to speak with a human agent?
+  utter_happy_to_help:
+  - text: Happy to help!
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

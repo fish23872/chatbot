@@ -1,5 +1,60 @@
 version: "3.1"
 nlu:
+- intent: buy_phone
+  examples: |
+    - I want to buy a phone
+    - I'm looking to purchase a smartphone
+    - Help me buy a new mobile
+    - I need a new phone
+    - I want to purchase a mobile phone
+    - I'd like to buy a phone
+    - I want to buy a smartphone please
+    - Recommend me a mobile phone
+- intent: provide_budget
+  examples: |
+    - premium
+    - no budget limit
+    - something cheap
+    - cheap
+    - under [500](amount) dollars
+    - around [300](amount)
+    - less than [250](amount)
+    - max [700](amount)
+    - about [400](amount) bucks
+    - [1000](amount) max
+    - below [600](amount)
+    - up to [800](amount)
+    - budget is [450](amount)
+- intent: provide_preferences
+  examples: |
+    - good camera and battery
+    - good camera
+    - good battery
+    - gaming performance
+    - large screen
+    - best camera available
+    - long battery life
+    - lightweight
+    - 5G capability
+    - durable build
+- intent: compare_phones_form_starter
+  examples: |
+    - Can you compare two models for me 
+    - I want to compare to phones
+    - Compare two models
+    - Compare
+    - i want to see the differences between two models
+- intent: compare_phones
+  examples: |
+    - Compare [iPhone 15](phone_model) and [Samsung S23](phone_model)
+    - How does [Pixel 7](phone_model) compare to [iPhone 14](phone_model)?
+    - Differences between [OnePlus 11](phone_model) vs [Xiaomi 13](phone_model)
+    - [Galaxy S23](phone_model) versus [iPhone 15 Pro](phone_model)
+    - Show me [iPhone 13](phone_model) vs [Pixel 7](phone_model)
+    - Compare [Samsung S22](phone_model) with [iPhone 14](phone_model)
+    - What's better: [Xiaomi 13T](phone_model) or [OnePlus 11](phone_model)?
+    - Can you give me a comparison between [s22](phone_model) and [iphone 13](phone_model)
+    - Can you compare the [s22](phone_model) and [iphone 13](phone_model)
 - intent: ask_reviews
   examples: |
     - What do customers say about the [iPhone 13 Pro Max](phone_model)?
@@ -15,6 +70,7 @@ nlu:
 - intent: ask_availability
   examples: |
     - Is the [Samsung Galaxy S25](phone_model) available?
+    - Is the [s22](phone_model) available?
     - Do you have the [iPhone 13](phone_model) in stock?
     - Is the [OnePlus 9 Pro](phone_model) available?
     - Can I get the [Xiaomi Mi 11](phone_model)?
@@ -35,25 +91,18 @@ nlu:
     - how much is it?
     - what is the price for the [s22](phone_model)?
     - Can you tell me the price of the [Xiaomi Mi 11](phone_model)?
-    - What’s the price for the [iPhone 14 Pro](phone_model)?
-    - How much is the [Samsung Galaxy S22 Ultra](phone_model)?
     - Tell me the price of the [OnePlus 10T](phone_model).
     - What’s the cost of the [Xiaomi Redmi Note 10](phone_model)?
-    - How much does the [iPhone 15 Pro Max](phone_model) cost?
-    - What’s the price tag on the [Samsung Galaxy S23](phone_model)?
-    - Can you give me the price for the [OnePlus 9R](phone_model)?
-    - How much is the [Xiaomi Mi 12](phone_model)?
-    - How much for the [s22](phone_model)?
-    - What’s the price of the [iPhone 13 Mini](phone_model)?
 - intent: ask_product_details
   examples: |
-    - Tell me about the [Xiaomi Redmi Note 10](phone_model)
-    - Can you tell me about [Xiaomi Mi 11](phone_model)?
-    - What is the [Samsung Galaxy S22 FE](phone_model)?
-    - I want to know about [Samsung Galaxy S22FE](phone_model)
-    - What is the [Samsung Galaxy S22](phone_model)?
-    - Tell me about the [S22 Ultra](phone_model)
-    - Please tell me about the [Samsung Galaxy S20 FE](phone_model)
+    - What are the specs of the [Samsung Galaxy S23 Ultra](phone_model)?
+    - Tell me about the [iPhone 15](phone_model)
+    - What's special about the [Galaxy S23](phone_model)?
+    - [Pixel 7](phone_model) details please
+    - Show me the [OnePlus 11](phone_model)
+    - Features of [Xiaomi 13](phone_model)
+    - Why should I buy [Samsung Galaxy S25](phone_model)?
+    - Show me info about [OnePlus 11](phone_model)
 - intent: ask_for_discounts
   examples: |
     - Are there any phones on sale?
@@ -90,8 +139,13 @@ nlu:
     - y
     - indeed
     - of course
-    - that sounds good
+    - sounds good
     - correct
+    - that's right
+    - ok
+    - yep
+    - go ahead
+    - agreed
 - intent: deny
   examples: |
     - no
@@ -101,7 +155,6 @@ nlu:
     - don't like that
     - no way
     - not really
-    - Nah, I would not like to be added to the list
     - nope
 - intent: goodbye
   examples: |
@@ -120,20 +173,12 @@ nlu:
     - hey
     - hello
     - hi
-    - hello there
-    - good morning
-    - good evening
     - moin
     - hey there
     - let's go
     - hey dude
-    - goodmorning
-    - goodevening
-    - good afternoon
     - yo
     - HEY
-    - heyy
-    - Hey!!!
     - hallo?
 - intent: bot_challenge
   examples: |
@@ -151,3 +196,15 @@ nlu:
     - ¿Puedes ayudarme en español?
     - Sprechen Sie Deutsch?
     - Você fala português?
+- intent: inform
+  examples: |
+    - [s22](phone_model)
+    - [Samsung s25](phone_model)
+    - [Galaxy s24](phone_model)
+    - [mi 13](phone_model)
+    - [Xiaomi mi 10](phone_model)
+    - [iPhone 13](phone_model)
+    - [iphone 16 pro](phone_model)
+    - [iphone 15 pro max](phone_model)
+    - [Samsung galaxy s23 ultra](phone_model)
+    - [onePlus 10 pro](phone_model)

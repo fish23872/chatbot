@@ -1,18 +1,27 @@
 interface MessageProps {
-    text: string;
-    isUser: boolean;
-  }
-  
-  const Message: React.FC<MessageProps> = ({ text, isUser }) => {
-    return (
+  text: string;
+  isUser: boolean;
+}
+
+const Message: React.FC<MessageProps> = ({ text, isUser }) => {
+  return (
+    <div
+      className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+    >
       <div
-        className={`p-4 my-4 rounded-lg min-h-12 flex max-w-md w-[50%] shadow-lg ${
-          isUser ? "bg-green-600 self-end mr-auto" : "bg-blue-950 self-start ml-auto"
-        }`}
+        className={`max-w-xs md:max-w-md lg:max-w-lg rounded-lg p-4 ${
+          isUser 
+            ? "bg-blue-600 rounded-tr-none" 
+            : "bg-gray-700 rounded-tl-none"
+        } shadow-md`}
       >
-        <span className="whitespace-pre-wrap break-words w-full">{text}</span>
+        <p className="text-white whitespace-pre-wrap break-words">{text}</p>
+        <div className={`absolute w-3 h-3 ${isUser ? "-right-3" : "-left-3"} top-0`}>
+          <div className={`w-full h-full ${isUser ? "bg-blue-600" : "bg-gray-700"}`}></div>
+        </div>
       </div>
-    );
-  };
-  
-  export default Message;
+    </div>
+  );
+};
+
+export default Message;

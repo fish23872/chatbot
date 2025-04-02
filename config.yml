@@ -22,13 +22,14 @@ pipeline:
     max_ngram: 4
   - name: DIETClassifier
     epochs: 100
+    constrain_similarities: true
   - name: EntitySynonymMapper
   - name: "ResponseSelector"
     retrieval_intent: nlu
     scale_loss: false
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.7
+    threshold: 0.6
     ambiguity_threshold: 0.1
 # Policies define the conversation flow, allowing the assistant to choose what action to take.
 policies:
@@ -37,5 +38,6 @@ policies:
   - name: "TEDPolicy"  # A Transformer-based policy that decides the next action based on conversation history
     max_history: 10 # Limit on the history length
     epochs: 100  # Number of training epochs for the policy
+    constrain_similarities: true
   - name: "RulePolicy"  # Allows you to define specific rules for certain paths in the conversation flow
     core_fallback_threshold: 0.4  # Threshold to fall back to rules

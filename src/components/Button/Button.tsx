@@ -2,14 +2,15 @@ import React from "react";
 
 interface ButtonProps {
   buttonText: string;
+  className: string;
   onClick: () => void; 
 }
 
-const Button: React.FC<ButtonProps> = ({ buttonText, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ buttonText, onClick, className }) => {
   return (
     <button
       onClick={onClick}
-      className="p-2 px-12 bg-red-600 rounded-lg"
+      className={className}
     >
       {buttonText}
     </button>
