@@ -7,7 +7,7 @@ from actions.actions import ActionNormalizePhoneModel
     ("samsung s23", "Samsung Galaxy S23"),
     ("Samsung Galaxy S23 Ultra", "Samsung Galaxy S23 Ultra"),
     ("S20 FE", "Samsung Galaxy S20 Fe"),
-    ("Mi 11", "Xiaomi Mi 11"),
+    ("mi 11", "Xiaomi Mi 11"),
     ("redmi note 10", "Xiaomi Redmi Note 10"),
     ("iPhone 13 Pro Max", "iPhone 13 Pro Max"),
     ("iphone 14 pro", "iPhone 14 Pro"),

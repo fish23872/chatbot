@@ -54,23 +54,24 @@ slots:
     - type: from_entity
       entity: phone_model
       intent: inform
+      requested_slot: phone1
       conditions:
       - active_loop: compare_phones_form
-      - requested_slot: phone1
   phone2:
     type: text
     mappings:
     - type: from_entity
       entity: phone_model
       intent: inform
+      requested_slot: phone2
       conditions:
       - active_loop: compare_phones_form
-      - requested_slot: phone2
 actions:
 - action_normalize_phone_models
 - action_recommend_by_budget
 - action_normalize_phone_model
 - action_ask_price
+- action_out_of_scope_inquiry
 - utter_ask_to_purchase
 - utter_redirect_for_purchase
 - utter_greet
@@ -102,7 +103,6 @@ actions:
 - action_escalate_to_human
 - action_get_discounted_models
 - action_check_stock
-- action_slot_reset
 responses:
   utter_ask_phone1:
   - text: "Please enter the first phone model you want to compare"

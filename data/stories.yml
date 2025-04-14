@@ -87,19 +87,19 @@ stories:
   steps: 
     - intent: ask_price
       entities: []
-    - action: utter_out_of_scope_inquiry
+    - action: action_out_of_scope_inquiry
 
 - story: Ask for phone availability without model
   steps: 
     - intent: ask_availability
       entities: []
-    - action: utter_out_of_scope_inquiry
+    - action: action_out_of_scope_inquiry
 
 - story: Ask for phone reviews without model
   steps: 
     - intent: ask_reviews
       entities: []
-    - action: utter_out_of_scope_inquiry
+    - action: action_out_of_scope_inquiry
 
 - story: handle no recognition for comparison
   steps:

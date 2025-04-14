@@ -3,11 +3,12 @@ import socket from "../../utils/socket";
 import InputForm from "./InputForm";
 import Message from "./Message";
 import Recommendation from "./Recommendation";
+import { ComparisonMessage } from "./ComparisonMessage";
 
 interface Message {
   text: string;
   isUser: boolean;
-  payload?: RecommendationsData;
+  payload?: RecommendationsData | ComparisonData;
 }
 
 export type Phone = {
@@ -18,6 +19,7 @@ export type Phone = {
   image_url: string;
   features: string[];
   purchase_url: string | null;
+  score: number;
 };
 
 export type RecommendationsData = {
@@ -25,11 +27,23 @@ export type RecommendationsData = {
   phones: Phone[];
 };
 
+export type ComparisonData = {
+  phone1: Phone;
+  phone2: Phone;
+  specs: {
+    name: string;
+    phone1: string | number;
+    phone2: string | number;
+    winner: 'phone1' | 'phone2';
+  }[];
+  summary: string
+};
+
 type Response = Array<{
   recipient_id: string;
   custom: {
-    payload: string;
-    data: RecommendationsData;
+    payload: 'recommendation' | 'comparison';
+    data: RecommendationsData | ComparisonData;
   };
   text?: string;
 }>;
@@ -49,10 +63,11 @@ const ChatWindow: React.FC = () => {
 
     const handleData = (data: Response) => {
       const firstItem = data[0];
+      if (!firstItem.custom) return;
       setMessages((prev) => [
         ...prev,
         {
-          text: "",
+          text: firstItem.text || "",
           isUser: false,
           payload: firstItem.custom.data
         }
@@ -72,6 +87,32 @@ const ChatWindow: React.FC = () => {
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
   };
 
+  const renderMessageContent = (msg: Message, index: number) => {
+    if (msg.isUser) {
+      return <Message text={msg.text} isUser={true} />;
+    }
+
+    if (msg.payload) {
+      if ('phone1' in msg.payload && 'phone2' in msg.payload) {
+        return (
+          <ComparisonMessage 
+            message={{
+              custom: {
+                payload: 'comparison',
+                data: msg.payload as ComparisonData
+              },
+              text: msg.text
+            }} 
+            key={index}
+          />
+        );
+      }
+      return <Recommendation data={msg.payload as RecommendationsData} key={index} />;
+    }
+
+    return <Message text={msg.text} isUser={false} key={index} />;
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-900">
       <div className="bg-gray-800 p-4 text-white shadow-md">
@@ -82,8 +123,7 @@ const ChatWindow: React.FC = () => {
         <div className="max-w-3xl mx-auto space-y-3">
           {messages.map((msg, index) => (
             <React.Fragment key={index}>
-              {msg.text &&<Message text={msg.text} isUser={msg.isUser} />}
-              {msg.payload && <Recommendation data={msg.payload} />}
+              {renderMessageContent(msg, index)}
             </React.Fragment>
           ))}
           <div ref={messagesEndRef} />

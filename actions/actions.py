@@ -2,23 +2,30 @@ import re
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.events import SlotSet, AllSlotsReset, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
 import random
 
+load_dotenv()
 FALLBACK_COUNTER = 0
+openai_api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=openai_api_key)
 
 phone_data = {
     "samsung galaxy s25": {
         "normalized_name": "Samsung Galaxy S25",
         "available": True,
         "quantity": 10,
-        "price": 1000,
+        "price": 1200,
         "discount": "20% off",
         "review_score": 4.7,
         "image_url": "https://phonedb.net/img/samsung_galaxy_s25_5g.jpg",
         "key_features": ["200MP Camera", "5000mAh Battery"],
         "purchase_url": "https://store.com/s25",
+        "score": 2265528
     },
-        "samsung galaxy s24": {
+    "samsung galaxy s24": {
         "normalized_name": "Samsung Galaxy S25",
         "available": True,
         "quantity": 10,
@@ -28,6 +35,7 @@ phone_data = {
         "image_url": "https://phonedb.net/img/samsung_galaxy_s24_5g.jpg",
         "key_features": ["100MP Camera", "5000mAh Battery"],
         "purchase_url": "https://store.com/s25",
+        "score": 1639695
     },
     "samsung galaxy s22": {
         "normalized_name": "Samsung Galaxy S22",
@@ -39,6 +47,7 @@ phone_data = {
         "image_url": "https://phonedb.net/img/samsung_galaxy_s22_5g.jpg",
         "key_features": ["100MP Camera"],
         "purchase_url": "https://store.com/s25",
+        "score": 1022200
     },
     "iphone 13 pro max": {
         "normalized_name": "iPhone 13 Pro Max",
@@ -50,6 +59,7 @@ phone_data = {
         "image_url": "https://phonedb.net/img/apple_iphone13_pro_max_3.jpg",
         "key_features": ["4352mAh Battery"],
         "purchase_url": "https://store.com/s25",
+        "score": 1327255
     },
     "xiaomi mi 11": {
         "normalized_name": "Xiaomi Mi 11",
@@ -61,6 +71,7 @@ phone_data = {
         "image_url": "https://phonedb.net/img/xiaomi_redmi_k80.jpg",
         "key_features": [],
         "purchase_url": "https://store.com/s25",
+        "score": 1022200
     },
     "oneplus 9 pro": {
         "normalized_name": "OnePlus 9 Pro",
@@ -72,6 +83,7 @@ phone_data = {
         "image_url": "https://phonedb.net/img/oneplus9_pro.jpg",
         "key_features": [],
         "purchase_url": "https://store.com/s25",
+        "score": 877600
     },
     "iphone 14 pro": {
         "normalized_name": "iPhone 14 Pro",
@@ -83,6 +95,7 @@ phone_data = {
         "image_url": "https://phonedb.net/img/apple_iphone14_pro_4.jpg",
         "key_features": [],
         "purchase_url": "https://store.com/s25",
+        "score": 1474011
     },
 }
 class BasePhoneAction(Action):
@@ -118,7 +131,6 @@ class BasePhoneAction(Action):
 
         dispatcher.utter_message(text=response)
         return []
-
 class ActionGetReviews(BasePhoneAction):
     def name(self):
         return "action_get_reviews"
@@ -126,7 +138,6 @@ class ActionGetReviews(BasePhoneAction):
     def generate_response(self, phone_data: dict):
         review_score = phone_data.get("review_score")
         return f"The {phone_data['normalized_name']} has a review score of {review_score}/5."
-
 class ActionCheckStock(BasePhoneAction):
     def name(self):
         return "action_check_stock"
@@ -136,7 +147,6 @@ class ActionCheckStock(BasePhoneAction):
             return f"Yes, the {phone_data['normalized_name']} is available. We have {phone_data['quantity']} in stock."
         else:
             return f"Sorry, the {phone_data['normalized_name']} is currently out of stock."
-
 class ActionGetDiscountedModels(BasePhoneAction):
     def name(self):
         return "action_get_discounted_models"
@@ -237,15 +247,19 @@ class ActionNormalizePhoneModel(Action):
             return base_model
         
         # Xiaomi
-        if re.match(r"mi \d+( t| pro| ultra)?$", model_lower):
-            parts = model_lower.split()
-            base = f"Xiaomi Mi {parts[1].upper()}"
-            if len(parts) > 2:
-                return f"{base} {parts[2].title()}"
-            return base
+        mi_match = re.match(r"(?:xiaomi\s+)?mi\s+(\d+)(?:\s+(t|pro|ultra))?$", model_lower)
+        if mi_match:
+            model_num = mi_match.group(1)
+            suffix = mi_match.group(2)
+            base = f"Xiaomi Mi {model_num}"
+            return f"{base} {suffix.title()}" if suffix else base
         
-        if re.match(r"redmi( note)? \d+( pro| ultra)?$", model_lower):
-            return f"Xiaomi {model.title()}"
+        redmi_match = re.match(r"(?:xiaomi\s+)?redmi(?:\s+note)?\s+(\d+)(?:\s+(pro|ultra))?$", model_lower)
+        if redmi_match:
+            model_num = redmi_match.group(1)
+            suffix = redmi_match.group(2)
+            base = f"Xiaomi Redmi {model_num}"
+            return f"{base} {suffix.title()}" if suffix else base
         
         # iPhone
         iphone_match = re.match(r"(iphone|i phone)\s*(\d{1,2})(\s*(pro))?(\s*(max))?$", model_lower)
@@ -261,7 +275,7 @@ class ActionNormalizePhoneModel(Action):
                 result += " Max"
             return result  
         
-            # OnePlus
+        # OnePlus
         oneplus_match = re.match(r"(oneplus|one plus|op)\s*(\d{1,2})(\s*(pro|t|r|ce|nord|ultra|5g))?(\s*(pro|t|r|ce|nord|ultra|5g))?$", model_lower)
         if oneplus_match:
             model_number = oneplus_match.group(2)
@@ -275,7 +289,139 @@ class ActionNormalizePhoneModel(Action):
                 result += f" {variant2.title()}"
             return result
         return None
-    
+class ActionComparePhonesUnused(Action):
+    def name(self):
+        return "action_compare_phones_unused"
+
+    def run(self, dispatcher, tracker, domain):
+        phone1 = tracker.get_slot("phone1")
+        phone2 = tracker.get_slot("phone2")
+        
+        normalized_phone1 = ActionNormalizePhoneModel.normalize_model(self, str(phone1))
+        normalized_phone2 = ActionNormalizePhoneModel.normalize_model(self, str(phone2))
+        
+        if normalized_phone1:
+            normalized_phone1 = normalized_phone1.lower()
+        if normalized_phone2:
+            normalized_phone2 = normalized_phone2.lower()
+
+        missing_phones = []
+        if normalized_phone1 not in phone_data:
+            missing_phones.append(phone1)
+        if normalized_phone2 not in phone_data:
+            missing_phones.append(phone2)
+
+        if missing_phones:
+            dispatcher.utter_message(
+                text=f"Sorry, I don't have data for: {', '.join(missing_phones)}."
+            )
+            return [SlotSet("phone1", None), SlotSet("phone2", None)]
+
+        phone1_data = phone_data[normalized_phone1]
+        phone2_data = phone_data[normalized_phone2]
+
+        short_json = self._shorten_json(phone1_data, phone2_data)
+        summary = self._generate_summary_with_llm(short_json)
+        
+        dispatcher.utter_message(json_message={
+            "payload": "recommendations",
+            "data": {
+                "phone1": {
+                    "name": phone1_data['normalized_name'],
+                    "price": phone1_data['price'],
+                    "rating": phone1_data['review_score'],
+                    "discount": phone1_data.get('discount'),
+                    "image_url": phone1_data.get('image_url', '/default-phone.png'),
+                    "features": phone1_data.get('key_features', []),
+                    "purchase_url": phone1_data.get('purchase_url')
+                },
+                "phone2": {
+                    "name": phone2_data['normalized_name'],
+                    "price": phone2_data['price'],
+                    "rating": phone2_data['review_score'],
+                    "discount": phone2_data.get('discount'),
+                    "image_url": phone2_data.get('image_url', '/default-phone.png'),
+                    "features": phone2_data.get('key_features', []),
+                    "purchase_url": phone2_data.get('purchase_url')
+                },
+                "specs": self._compare_specs(phone1_data, phone2_data),
+                "summary": summary
+            }
+        })
+        return [SlotSet("phone1", None), SlotSet("phone2", None)]
+
+    def _generate_summary_with_llm(self, data):
+        try:
+            prompt = (
+                "You are an expert assistant for a webshop selling mobile phones. "
+                "When given a comparison of two phones, summarize the comparison between the phones you were given based on the data you will receive. "
+                "Only answer with sentences, two or three. Summarize the strengths and weaknesses of both.\n\n"
+                f"Data: {data}"
+            )
+
+            response = client.responses.create(
+                model="gpt-4o-mini",
+                input=prompt,
+            )
+
+            return response.output_text
+
+        except Exception as e:
+            print(f"LLM request failed: {e}")
+            return "I couldn't generate a summary at the moment."
+
+    def _compare_specs(self, phone1, phone2):
+        return [
+            {
+                "name": "Price",
+                "phone1": f"${phone1['price']} {phone1['discount'] or ''}",
+                "phone2": f"${phone2['price']} {phone2['discount'] or ''}",
+                "winner": "phone1" if phone1['price'] < phone2['price'] else "phone2"
+            },
+            {
+                "name": "Review Score",
+                "phone1": phone1['review_score'],
+                "phone2": phone2['review_score'],
+                "winner": "phone1" if phone1['review_score'] > phone2['review_score'] else "phone2"
+            },
+            {
+                "name": "Availability",
+                "phone1": "In Stock" if phone1['available'] else "Out of Stock",
+                "phone2": "In Stock" if phone2['available'] else "Out of Stock",
+                "winner": "phone1" if phone1['quantity'] > phone2['quantity'] else "phone2"
+            },
+            {
+                "name": "Score",
+                "phone1": phone1['score'],
+                "phone2": phone2['score'],
+                "winner": "phone1" if phone1['score'] > phone2['quantity'] else "phone2"
+            }
+        ]
+
+    def _shorten_json(self, phone1, phone2):
+        return {
+            "p1": {
+                "n": phone1['normalized_name'],
+                "p": phone1['price'],
+                "r": phone1['review_score'],
+                "d": phone1['discount'],
+                "f": phone1.get('key_features', []),
+                "s": phone1['score']
+            },
+            "p2": {
+                "n": phone2['normalized_name'],
+                "p": phone2['price'],
+                "r": phone2['review_score'],
+                "d": phone2['discount'],
+                "f": phone2.get('key_features', []),
+                "s": phone2['score']
+            },
+            "s": [
+                {"n": "price", "w": "p1" if phone1['price'] < phone2['price'] else "p2"},
+                {"n": "score", "w": "p1" if phone1['review_score'] > phone2['review_score'] else "p2"},
+                {"n": "avail", "w": "p1" if phone1['quantity'] > phone2['quantity'] else "p2"}
+            ]
+        }
 class ActionNormalizePhoneModels(Action):
     def name(self):
         return "action_normalize_phone_models"
@@ -302,32 +448,22 @@ class ActionNormalizePhoneModels(Action):
             return []
         
         if len(phone_models) >= 2:
-            phone1 = ActionNormalizePhoneModel.normalize_model(phone_models[0])
-            phone2 = ActionNormalizePhoneModel.normalize_model(phone_models[1])            
+            phone1 = ActionNormalizePhoneModel.normalize_model(self, phone1)
+            phone2 = ActionNormalizePhoneModel.normalize_model(self, phone2)   
             if phone1 is None or phone2 is None:
                 dispatcher.utter_message(text="Sorry, I couldn't recognize both phone models. Please try again.")
                 return [SlotSet("phone_model", None)]
-            
-            result = f"Comparing {phone1} vs {phone2}: ..."
-            dispatcher.utter_message(text=result)
+
+            return [SlotSet("phone1", phone1), SlotSet("phone2", phone2)]
         else:
             dispatcher.utter_message(text="Please specify exactly two phones to compare")
         
         return [SlotSet("phone_model", None)]
     
-class ActionComparePhonesUnused(Action):
-    def name(self):
-        return "action_compare_phones_unused"
 
-    def run(self, dispatcher, tracker, domain):
-        phone1 = tracker.get_slot("phone_model")
-        phone2 = tracker.get_slot("phone_model")
-        
-        dispatcher.utter_message(
-            text=f"Here's how {phone1} compares to {phone2}:"
-        )
-        
-        return []
+    
+        # TODO: LLM evaluation of comparison data
+        # TODO: Send out_of_scope to LLM
 class ActionRecommendByBudget(Action):
     def name(self):
         return "action_recommend_by_budget"
@@ -449,8 +585,7 @@ class ActionRecommendByBudget(Action):
                 "badge": "Super Budget" if cheap_phones[0][1]['price'] <= 300 else None
             }
         })
-        return []
-    
+        return []  
 class ValidateComparePhonesForm(FormValidationAction):
     def name(self):
         return "validate_compare_phones_form"
@@ -464,10 +599,10 @@ class ValidateComparePhonesForm(FormValidationAction):
     ):
         normalized = ActionNormalizePhoneModel().normalize_model(value)
         if not normalized:
-            print("asda")
+            dispatcher.utter_message(response="utter_invalid_phone_model")
             dispatcher.utter_message(f"Sorry, I don't recognize '{value}' as a valid phone model")
             return {"phone1": None}
-        return {"phone1": normalized}
+        return [SlotSet("phone1", normalized), SlotSet("phone_model", None)]
 
     async def validate_phone2(
         self,
@@ -480,15 +615,15 @@ class ValidateComparePhonesForm(FormValidationAction):
         
         if not normalized:
             dispatcher.utter_message(f"Sorry, I don't recognize '{value}' as a valid phone model")
-            return {"phone2": None}
-            
+            return SlotSet("phone1", None)
+        
         phone1 = tracker.get_slot("phone1")
-        if normalized.lower() == phone1.lower():
-            dispatcher.utter_message("Please select two different models to compare")
-            return {"phone2": None}
-            
-        return {"phone2": normalized}
-
+        
+        if phone1 and normalized.lower() == phone1.lower():
+            dispatcher.utter_message(response="utter_ask_clarify_comparison")
+            return SlotSet("phone2", None)
+        
+        return [SlotSet("phone2", normalized), SlotSet("phone_model", None)]
 class ActionComparePhones(FormValidationAction):
     def name(self):
         return "action_compare_phones"
@@ -507,3 +642,39 @@ class ActionComparePhones(FormValidationAction):
 
     def compare_models(self, phone1, phone2):
         return f"Comparison results:\n{phone1} vs {phone2}\n\n[Specs comparison would go here]"
+
+class ActionOutOfScopeInquiry(Action):
+    def name(self):
+        return "action_out_of_scope_inquiry"
+
+    async def run(
+        self, 
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: dict):
+        
+        user_message = tracker.latest_message.get("text")
+        
+        try:
+            response = self._get_llm_response(user_message)
+            dispatcher.utter_message(text=response)
+            
+        except Exception as e:
+            dispatcher.utter_message(text="I'm not sure how to answer that. Could you ask me something about mobile phones?")
+            
+        return []
+
+    def _get_llm_response(self, user_input):
+        """Get response from LLM for out-of-scope questions"""
+        
+        prompt = f"""
+        You are an assistant for a webshop that sells mobile phones. 
+        Your task is to inform the user that this service does not help with anything but mobile phones. 
+        Keep it under 3 sentences. User question: {user_input}"""
+        
+        response = client.responses.create(
+                model="gpt-4o-mini",
+                input=prompt,
+            )
+        
+        return response.output_text

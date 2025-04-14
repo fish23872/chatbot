@@ -62,4 +62,4 @@ The project uses the following technologies:
 ### Escalation to Human Agents
 -	If the bot cannot resolve a customer’s issue, it can escalate the conversation to a human agent for further support.
 -   There will be a notification for human agents when escalating
--    The conversation with the human agents will be real-time
+-   The conversation with the human agents will be real-time

@@ -29,7 +29,7 @@ pipeline:
     scale_loss: false
     epochs: 100
   - name: FallbackClassifier
-    threshold: 0.6
+    threshold: 0.8
     ambiguity_threshold: 0.1
 # Policies define the conversation flow, allowing the assistant to choose what action to take.
 policies:
