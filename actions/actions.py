@@ -1,18 +1,11 @@
-import re
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.events import SlotSet, AllSlotsReset, FollowupAction
 from rasa_sdk.executor import CollectingDispatcher
-from openai import OpenAI
-import os
-from dotenv import load_dotenv
+from .utils.llm_actions import LlmActions
 from .utils.phone_normalizer import PhoneNormalizer
 from .utils.database import MongoDB
 
-load_dotenv()
 FALLBACK_COUNTER = 0
-openai_api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=openai_api_key)
-
 db = MongoDB()
 class BasePhoneAction(Action):
     def name(self):
@@ -167,9 +160,19 @@ class ActionComparePhones(Action):
             if None not in missing: 
                 dispatcher.utter_message(f"Sorry, no data for: {', '.join(missing)}")
             return [SlotSet("phone1", None), SlotSet("phone2", None)]
-
+        
         short_json = self._shorten_json(phone1_data, phone2_data)
-        summary = self._generate_summary_with_llm(short_json)
+        
+        prompt = f"""
+            You are an expert assistant for a webshop selling mobile phones.
+            When given a comparison of two phones, summarize the comparison between the phones you were given based on the data you will receive.
+            Only answer with sentences, two or three. Summarize the strengths and weaknesses of both.\n\n
+            fData: {short_json}"""
+        
+        try:
+            summary = LlmActions.create_response(prompt)
+        except Exception as e:
+            summary = "I couldn't give a summary at the moment"
         
         dispatcher.utter_message(json_message={
             "payload": "recommendations",
@@ -197,26 +200,6 @@ class ActionComparePhones(Action):
             }
         })
         return [SlotSet("phone1", None), SlotSet("phone2", None)]
-
-    def _generate_summary_with_llm(self, data):
-        try:
-            prompt = (
-                "You are an expert assistant for a webshop selling mobile phones. "
-                "When given a comparison of two phones, summarize the comparison between the phones you were given based on the data you will receive. "
-                "Only answer with sentences, two or three. Summarize the strengths and weaknesses of both.\n\n"
-                f"Data: {data}"
-            )
-
-            response = client.responses.create(
-                model="gpt-4o-mini",
-                input=prompt,
-            )
-
-            return response.output_text
-
-        except Exception as e:
-            print(f"LLM request failed: {e}")
-            return "I couldn't generate a summary at the moment."
 
     def _compare_specs(self, phone1, phone2):
         return [
@@ -491,26 +474,16 @@ class ActionOutOfScopeInquiry(Action):
         
         user_message = tracker.latest_message.get("text")
         
+        prompt = f"""
+        You are an assistant for a webshop that sells mobile phones. 
+        Your task is to inform the user that this service does not help with anything but mobile phones. 
+        Keep it under 3 sentences. User question: {user_message}"""
+        
         try:
-            response = self._get_llm_response(user_message)
+            response = LlmActions.create_response(prompt)
             dispatcher.utter_message(text=response)
             
         except Exception as e:
             dispatcher.utter_message(text="I'm not sure how to answer that. Could you ask me something about mobile phones?")
             
         return []
-
-    def _get_llm_response(self, user_input):
-        """Get response from LLM for out-of-scope questions"""
-        
-        prompt = f"""
-        You are an assistant for a webshop that sells mobile phones. 
-        Your task is to inform the user that this service does not help with anything but mobile phones. 
-        Keep it under 3 sentences. User question: {user_input}"""
-        
-        response = client.responses.create(
-                model="gpt-4o-mini",
-                input=prompt,
-            )
-        
-        return response.output_text
