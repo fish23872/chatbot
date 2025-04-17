@@ -47,14 +47,16 @@ nlu:
 - intent: compare_phones
   examples: |
     - Compare [iPhone 15](phone_model) and [Samsung S23](phone_model)
-    - How does [Pixel 7](phone_model) compare to [iPhone 14](phone_model)?
+    - How does [Samsung Galaxy Z Fold 5](phone_model) compare to [iPhone 14](phone_model)?
     - Differences between [OnePlus 11](phone_model) vs [Xiaomi 13](phone_model)
     - [Galaxy S23](phone_model) versus [iPhone 15 Pro](phone_model)
-    - Show me [iPhone 13](phone_model) vs [Pixel 7](phone_model)
+    - Show me the differences between [iPhone 13](phone_model) vs [Xiaomi Redmi Note 12 Pro](phone_model)
     - Compare [Samsung S22](phone_model) with [iPhone 14](phone_model)
+    - Compare [Samsung Galaxy A14](phone_model) with the [Xiaomi Redmi 12C](phone_model)
     - What's better: [Xiaomi 13T](phone_model) or [OnePlus 11](phone_model)?
     - Can you give me a comparison between [s22](phone_model) and [iphone 13](phone_model)
-    - Can you compare the [s22](phone_model) and [iphone 13](phone_model)
+    - Can you compare the [s25](phone_model) and [iphone 13](phone_model)
+    - Comparison between the [OnePlus 8 Pro](phone_model) and the [OnePlus Nord 3](phone_model)
 - intent: ask_reviews
   examples: |
     - What do customers say about the [iPhone 13 Pro Max](phone_model)?
@@ -78,16 +80,14 @@ nlu:
     - Are there any [Samsung Galaxy S21 Ultra](phone_model) available?
     - Do you have any of the [OnePlus 10](phone_model)?
     - check stock for [iPhone 15 pro max](phone_model)
-    - Do you have any of the [iPhone 15 pro max](phone_model)?
+    - Do you have any of the [Redmi note 12 pro](phone_model)?
 - intent: ask_price
   examples: |
     - How much is the [iPhone 13](phone_model)?
     - What’s the price of the [Samsung Galaxy S21 Ultra](phone_model)?
     - How much does the [OnePlus 9 Pro](phone_model) cost?
     - Please tell me the price of the [Xiaomi Mi 10 Pro](phone_model)
-    - What is the cost for the [s23](phone_model)?
-    - price??? [s24](phone_model)
-    - cost? [iphone 13](phone_model)
+    - What is the cost for the [s23 ultra](phone_model)?
     - how much is it?
     - what is the price for the [s22](phone_model)?
     - Can you tell me the price of the [Xiaomi Mi 11](phone_model)?
@@ -98,7 +98,7 @@ nlu:
     - What are the specs of the [Samsung Galaxy S23 Ultra](phone_model)?
     - Tell me about the [iPhone 15](phone_model)
     - What's special about the [Galaxy S23](phone_model)?
-    - [Pixel 7](phone_model) details please
+    - [Xiaomi note 12 pro](phone_model) details please
     - Show me the [OnePlus 11](phone_model)
     - Features of [Xiaomi 13](phone_model)
     - Why should I buy [Samsung Galaxy S25](phone_model)?
