@@ -4,49 +4,13 @@ import InputForm from "./InputForm";
 import Message from "./Message";
 import Recommendation from "./Recommendation";
 import { ComparisonMessage } from "./ComparisonMessage";
+import { RecommendationsData, ComparisonData, Response } from "@types";
 
 interface Message {
   text: string;
   isUser: boolean;
   payload?: RecommendationsData | ComparisonData;
 }
-
-export type Phone = {
-  name: string;
-  price: number;
-  rating: number;
-  discount: string | null;
-  image_url: string;
-  features: string[];
-  purchase_url: string | null;
-  score: number;
-};
-
-export type RecommendationsData = {
-  title: string;
-  phones: Phone[];
-};
-
-export type ComparisonData = {
-  phone1: Phone;
-  phone2: Phone;
-  specs: {
-    name: string;
-    phone1: string | number;
-    phone2: string | number;
-    winner: 'phone1' | 'phone2';
-  }[];
-  summary: string
-};
-
-type Response = Array<{
-  recipient_id: string;
-  custom: {
-    payload: 'recommendation' | 'comparison';
-    data: RecommendationsData | ComparisonData;
-  };
-  text?: string;
-}>;
 
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);

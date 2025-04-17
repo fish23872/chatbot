@@ -92,8 +92,8 @@ actions:
 - utter_happy_to_help
 - action_base
 - validate_compare_phones_form
+- action_compare_phones_form
 - action_compare_phones
-- action_compare_phones_unused
 - utter_confirm_comparison
 - utter_ask_phone1
 - utter_ask_phone2

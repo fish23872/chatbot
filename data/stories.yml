@@ -118,4 +118,4 @@ stories:
     - phone_model
   - slot_was_set:
     - phone_model
-  - action: action_compare_phones_unused
+  - action: action_compare_phones

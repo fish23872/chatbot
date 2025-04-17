@@ -1,5 +1,5 @@
 import React from "react";
-import { RecommendationsData } from "./ChatWindow";
+import { RecommendationsData } from "@types";
 
 interface RecommendationProps {
   data: RecommendationsData;

@@ -80,6 +80,6 @@ rules:
   - active_loop: null
   - slot_was_set:
     - requested_slot: null
-  - action: action_compare_phones_unused
+  - action: action_compare_phones
   - active_loop: null
   - action: action_restart
