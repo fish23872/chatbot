@@ -1,18 +1,3 @@
-## Getting Started
-
-To get started with the project, install the necessary dependencies by running the appropriate command for the operating system:
-(This is for me)
-## Linux / Mac
-
-```sh
-pipx install fastapi && pipx install uvicorn && pip install python-socketio && yarn install
-```
-
-## Windows
-
-```sh
-pip install fastapi && pip install uvicorn && pip install python-socketio
-```
 # To run the application:
 
 ```sh
@@ -39,11 +24,12 @@ The project uses the following technologies:
 - **Uvicorn**: A server used for the real-time hosting (python). https://www.uvicorn.org/
 
 ### Database: 
-- Not implemented yet.
+- MongoDB
 
 ### NLP libraries - Python: 
 - **spaCy**: Industrial-Strength Natural Language Processing https://spacy.io/
 - **Rasa Open Source**: Provides flexible conversational AI software https://rasa.com/
+- **ChatGPT**: For LLM API Calls
 
 # Features and Functionality (WIP)
 
@@ -54,6 +40,7 @@ The project uses the following technologies:
 ### Product Information
 -	The bot can retrieve product details from the database and present it to the customer.
 -   This way, the user can be redirected to the product page (to purchase the product): Purchasing products will not be implemented in this project.
+-   Products can be compared, a summary from an LLM Model will be included for each comparison
 
 ### Conversational AI
 -	The bot can assist in troubleshooting, product recommendations, or answering general inquiries.
