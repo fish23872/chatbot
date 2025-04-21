@@ -53,19 +53,17 @@ slots:
     mappings:
     - type: from_entity
       entity: phone_model
-      intent: inform
-      requested_slot: phone1
       conditions:
       - active_loop: compare_phones_form
+        requested_slot: phone1
   phone2:
     type: text
     mappings:
     - type: from_entity
       entity: phone_model
-      intent: inform
-      requested_slot: phone2
       conditions:
       - active_loop: compare_phones_form
+        requested_slot: phone2
 actions:
 - action_normalize_phone_models
 - action_recommend_by_budget

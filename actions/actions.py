@@ -81,7 +81,6 @@ class ActionAskPrice(BasePhoneAction):
         else:
             dispatcher.utter_message(text="Please specify the phone model you're asking about.")
             return [SlotSet("is_valid_phone", False)]
-        
 class ActionGetDiscountedModels(Action):
     def name(self):
         return "action_get_discounted_models"
@@ -122,7 +121,7 @@ class ActionEscalateToHuman(Action):
         return "action_escalate_to_human"
 
     def run(self, dispatcher, tracker, domain):
-        # TODO Logic to escalate to a human agent
+        # TODO: Logic to escalate to a human agent
         dispatcher.utter_message(response="utter_escalate_to_human")
         return None
 class ActionNormalizePhoneModel(Action):
@@ -408,57 +407,37 @@ class ActionRecommendByBudget(Action):
 class ValidateComparePhonesForm(FormValidationAction):
     def name(self):
         return "validate_compare_phones_form"
-
-    async def validate_phone1(
-        self,
-        value: str,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: dict,
-    ):
-        normalized = PhoneNormalizer.normalize(value)
-        if not normalized:
-            dispatcher.utter_message(response="utter_invalid_phone_model")
-            dispatcher.utter_message(f"Sorry, I don't recognize '{value}' as a valid phone model")
-            return {"phone1": None}
-        return [SlotSet("phone1", normalized), SlotSet("phone_model", None)]
-
-    async def validate_phone2(
-        self,
-        value: str,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: dict,
-    ):
-        normalized = PhoneNormalizer.normalize(value)
-        
-        if not normalized:
-            dispatcher.utter_message(f"Sorry, I don't recognize '{value}' as a valid phone model")
-            return SlotSet("phone1", None)
-        
+    def validate_phone1(self, slot_value, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         phone1 = tracker.get_slot("phone1")
+        phone2 = tracker.get_slot("phone2")
         
-        if phone1 and normalized.lower() == phone1.lower():
-            dispatcher.utter_message(response="utter_ask_clarify_comparison")
-            return SlotSet("phone2", None)
+        if phone1 and phone1 != slot_value:
+            if not phone2:
+                return {"phone1": slot_value, "phone2": phone1}
+        return {"phone1": slot_value}
+    
+    def validate_phone2(self, slot_value, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        phone1 = tracker.get_slot("phone1")
+        if slot_value == phone1:
+            dispatcher.utter_message(text=f"You've already selected {phone1}. Please choose a different phone model.")
+            return {"phone2": None}
         
-        return [SlotSet("phone2", normalized), SlotSet("phone_model", None)]
+        return {"phone2": slot_value}
+        
 class ActionComparePhonesForm(FormValidationAction):
     def name(self):
         return "action_compare_phones_form"
-
     async def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict
     ):
         phone1 = tracker.get_slot("phone1")
         phone2 = tracker.get_slot("phone2")
-        
-        comparison_result = self.compare_models(phone1, phone2)
-        
-        dispatcher.utter_message(text=comparison_result)
+        if phone1 and phone2:
+            comparison_result = self.compare_models(phone1, phone2)
+            dispatcher.utter_message(text=comparison_result)
         
         return [SlotSet("phone1", None), SlotSet("phone2", None)]
-
+    
     def compare_models(self, phone1, phone2):
         return f"Comparison results:\n{phone1} vs {phone2}\n\n[Specs comparison would go here]"
 
