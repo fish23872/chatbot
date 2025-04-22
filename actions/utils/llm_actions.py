@@ -9,7 +9,7 @@ client = OpenAI(api_key=openai_api_key)
 class LlmActions:
     def create_response(prompt):
         response = client.responses.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-nano",
             input=prompt,
         )
         return response.output_text

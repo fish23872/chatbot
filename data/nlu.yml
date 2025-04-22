@@ -1,5 +1,16 @@
 version: "3.1"
 nlu:
+- intent: request_repairs
+  examples: |
+    - My [iPhone 15](phone_model) screen is broken
+    - Need battery replacement for [Samsung S23](phone_model)
+    - [Redmi 12C](phone_model) fell in water
+    - The charging port isn't working
+    - Back glass repair needed
+    - it is broken
+    - I need repairs for my mobile phone
+    - It's not working properly
+    - Repairs please for my [Iphone 13 pro max](phone_model)
 - intent: buy_phone
   examples: |
     - I want to buy a phone

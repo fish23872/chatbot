@@ -4,6 +4,8 @@ from rasa_sdk.executor import CollectingDispatcher
 from .utils.llm_actions import LlmActions
 from .utils.phone_normalizer import PhoneNormalizer
 from .utils.database import MongoDB
+import re
+import json
 
 FALLBACK_COUNTER = 0
 db = MongoDB()
@@ -165,8 +167,8 @@ class ActionComparePhones(Action):
         prompt = f"""
             You are an expert assistant for a webshop selling mobile phones.
             When given a comparison of two phones, summarize the comparison between the phones you were given based on the data you will receive.
-            Only answer with sentences, two or three. Summarize the strengths and weaknesses of both.\n\n
-            fData: {short_json}"""
+            Only answer with sentences, three or four. Summarize the strengths and weaknesses of both.
+            Data: {short_json}"""
         
         try:
             summary = LlmActions.create_response(prompt)
@@ -198,7 +200,7 @@ class ActionComparePhones(Action):
                 "summary": summary
             }
         })
-        return [SlotSet("phone1", None), SlotSet("phone2", None)]
+        return []
 
     def _compare_specs(self, phone1, phone2):
         return [
@@ -441,6 +443,69 @@ class ActionComparePhonesForm(FormValidationAction):
     def compare_models(self, phone1, phone2):
         return f"Comparison results:\n{phone1} vs {phone2}\n\n[Specs comparison would go here]"
 
+class ActionHandleRepairRequest(Action):
+    def name(self):
+        return "action_handle_repairs"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        phone_model = tracker.get_slot("phone_model")
+        normalized_phone = PhoneNormalizer.normalize(phone_model) if phone_model else None
+        phone_data = db.get_phone(normalized_phone) if normalized_phone else None
+        
+        if phone_data:
+            dispatcher.utter_message("Please provide a description for the issue you are having with your device.")
+            return [
+                SlotSet("awaiting_repair_description", True),
+                SlotSet("repair_phone_model", normalized_phone),
+                SlotSet("repair_initial_message", tracker.latest_message.get('text'))
+            ]
+        else:
+            dispatcher.utter_message("Sorry, we are unable to provide repair services for this product.")
+            return [SlotSet("awaiting_repair_description", False)]
+class ActionProcessRepairDescription(Action):
+    def name(self):
+        return "action_process_repair_description"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        if not tracker.get_slot("awaiting_repair_description"):
+            return []
+            
+        user_message = tracker.latest_message.get('text')
+        initial_message = tracker.get_slot("repair_initial_message")
+        phone_model = tracker.get_slot("repair_phone_model")
+        
+        prompt = f"""
+        Analyze this phone repair request:
+        Device: {phone_model}
+        Issue: {initial_message}
+        Details: {user_message}
+
+        Return JSON with:
+        - "urgency": "urgent" (if unusable, e.g., won't turn on) or "standard" (minor issues).
+        - "category": ["screen","battery","water","charging","other","unclear"] (pick best match).
+        - "needs_additional_info": true (ONLY if description is vague, e.g., "broken" without details).
+        """
+        
+        response = LlmActions.create_response(prompt)
+        cleaned_response = response.replace('```json', '').replace('```', '').replace('\n','').strip()
+
+        try:
+            parsed_response = json.loads(cleaned_response)
+            
+            payload = {
+                "payload": "repairs",
+                "data": parsed_response 
+            }
+            
+            dispatcher.utter_message(json_message=payload)
+        except json.JSONDecodeError as e:
+            print(f"Failed to parse LLM response: {e}")
+            dispatcher.utter_message(text="Sorry, there was an error processing your repair request")
+            
+        return [SlotSet("awaiting_repair_description",  None),
+                SlotSet("repair_phone_model", None),
+                SlotSet("repair_initial_message", None)]
+        
 class ActionOutOfScopeInquiry(Action):
     def name(self):
         return "action_out_of_scope_inquiry"

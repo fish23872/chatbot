@@ -3,13 +3,14 @@ import socket from "../../utils/socket";
 import InputForm from "./InputForm";
 import Message from "./Message";
 import Recommendation from "./Recommendation";
+import { RepairMessage } from "./RepairMessage";
 import { ComparisonMessage } from "./ComparisonMessage";
-import { RecommendationsData, ComparisonData, Response } from "@types";
+import { RecommendationsData, ComparisonData, Response, RepairData } from "@types";
 
 interface Message {
   text: string;
   isUser: boolean;
-  payload?: RecommendationsData | ComparisonData;
+  payload?: RecommendationsData | ComparisonData | RepairData;
 }
 
 const ChatWindow: React.FC = () => {
@@ -71,6 +72,11 @@ const ChatWindow: React.FC = () => {
           />
         );
       }
+
+      if (msg.payload && 'urgency' in msg.payload && 'category' in msg.payload) {
+        return <RepairMessage data={msg.payload as RepairData} key={index} />;
+      }
+
       return <Recommendation data={msg.payload as RecommendationsData} key={index} />;
     }
 

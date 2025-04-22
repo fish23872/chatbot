@@ -1,3 +1,21 @@
+export interface RepairTicket extends RepairData {
+  id: string;
+  createdAt: Date;
+  status: "open" | "in-progress" | "completed";
+  customerNotes?: string;
+  technicianNotes?: string;
+}
+
+export interface RepairMessageProps {
+  data: RepairData;
+}
+
+export interface TicketsContextType {
+  tickets: RepairTicket[];
+  createTicket: (data: RepairData) => RepairTicket;
+  getTicket: (id: string) => RepairTicket | undefined;
+}
+
 export type Phone = {
     name: string;
     price: number;
@@ -29,8 +47,8 @@ export type Phone = {
   export type Response = Array<{
     recipient_id: string;
     custom: {
-      payload: 'recommendation' | 'comparison';
-      data: RecommendationsData | ComparisonData;
+      payload: 'recommendation' | 'comparison' | 'repairs';
+      data: RecommendationsData | ComparisonData | RepairData;
     };
     text?: string;
   }>;
@@ -45,4 +63,12 @@ export type Phone = {
   export type ComparisonPayload = {
     payload: 'comparison';
     data: ComparisonData;
+  };
+
+  export type PhoneIssueCategory = "screen" | "battery" | "water" | "charging" | "other" | "unclear";
+
+  export type RepairData = {
+    urgency: "urgent" | "standard";
+    category: PhoneIssueCategory[];
+    needs_additional_info: boolean;
   };

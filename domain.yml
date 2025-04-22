@@ -1,6 +1,7 @@
 version: '3.1'
 intents:
 - affirm
+- request_repairs
 - ask_availability
 - ask_for_discounts
 - ask_multilingual_support
@@ -30,7 +31,42 @@ entities:
 - amount
 - phone1
 - phone2
+- urgency
+- issue_type
+- awaiting_repair_description
+- repair_phone_model
+- repair_initial_message
+- repair_description
 slots:
+  awaiting_repair_description:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
+  repair_phone_model:
+    type: text
+    mappings:
+    - type: custom
+  repair_initial_message:
+    type: text
+    mappings:
+    - type: custom
+  repair_description:
+    type: text
+    mappings:
+    - type: custom
+  urgency:
+    type: categorical
+    values: ["urgent", "standard"]
+    influence_conversation: true
+    mappings:
+    - type: custom
+  issue_type:
+    type: categorical
+    values: ["screen", "battery", "water", "charging", "other"]
+    influence_conversation: true
+    mappings:
+    - type: custom
   phone_model:
     type: text
     influence_conversation: true
@@ -68,18 +104,19 @@ actions:
 - action_normalize_phone_models
 - action_recommend_by_budget
 - action_normalize_phone_model
+- action_handle_repairs
+- action_process_repair_description
 - action_ask_price
 - action_out_of_scope_inquiry
 - utter_ask_to_purchase
 - utter_redirect_for_purchase
 - utter_greet
-- utter_ask_availability
 - utter_default
-- utter_ask_price
 - utter_did_that_help
 - utter_compare_models
 - utter_ask_user_question
 - utter_ask_what_to_help
+- utter_ask_phone_model
 - utter_ask_to_purchase_either
 - utter_accept_denial_phone_purchase
 - utter_phone_model_not_recognized
@@ -106,6 +143,8 @@ responses:
   - text: "Please enter the first phone model you want to compare"
   utter_ask_phone2:
   - text: "Now please enter the second phone model to compare"
+  utter_ask_phone_model:
+  - text: "Please provide a phone model name"
   utter_confirm_comparison:
   - text: "Comparing {phone1} vs {phone2}..."
   utter_ask_to_purchase_either:

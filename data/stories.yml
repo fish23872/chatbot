@@ -101,21 +101,16 @@ stories:
       entities: []
     - action: action_out_of_scope_inquiry
 
-- story: handle no recognition for comparison
+- story: happy path repair flow
   steps:
-    - intent: compare_phones
-      entities: []
-    - action: utter_ask_clarify_comparison
-
-- story: compare two phones successfully
-  steps:
-  - intent: compare_phones
+  - intent: request_repairs
     entities:
-    - phone_model
-    - phone_model
-  - action: action_normalize_phone_models
+    - phone_model: "iPhone 12"
+  - action: action_handle_repairs
   - slot_was_set:
-    - phone_model
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
   - slot_was_set:
-    - phone_model
-  - action: action_compare_phones
+    - issue_type: "screen"
+    - urgency: "urgent"
