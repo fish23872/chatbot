@@ -1,7 +1,11 @@
 version: "3.1"
 
 rules:
-
+- rule: out of scope answers
+  steps:
+    - intent: out_of_scope
+    - action: action_out_of_scope_inquiry
+    - action: action_restart
 - rule: Normalize phone model name and respond
   steps:
     - intent: ask_product_details
@@ -56,11 +60,6 @@ rules:
       - phone_model
   - action: action_get_reviews
 
-- rule: provided a budget
-  steps: 
-  - intent: provide_budget
-  - action: action_recommend_by_budget
-
 - rule: happy to help every time user thanks
   steps:
   - intent: thank
@@ -72,15 +71,10 @@ rules:
   - action: compare_phones_form
   - active_loop: compare_phones_form
 
-- rule: Activate repair form
-  steps:
-  - intent: request_repairs
-  - action: action_handle_repairs
-
 - rule: Capture repair description
   condition:
   - slot_was_set:
-    - awaiting_repair_description: true
+    - awaiting_description: true
   steps:
   - action: action_listen
   - action: action_process_repair_description

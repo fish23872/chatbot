@@ -20,6 +20,12 @@ intents:
 - inform
 - compare_phones_form_starter
 - thank
+- out_of_scope
+- pref_brand_apple
+- pref_brand_samsung
+- pref_brand_oneplus
+- pref_brand_xiaomi
+- pref_brand_none
 forms:
   compare_phones_form:
     required_slots:
@@ -33,12 +39,17 @@ entities:
 - phone2
 - urgency
 - issue_type
-- awaiting_repair_description
+- awaiting_description
 - repair_phone_model
 - repair_initial_message
 - repair_description
+- brand_preference
 slots:
-  awaiting_repair_description:
+  brand_preference:
+    type: text
+    mappings:
+    - type: custom
+  awaiting_description:
     type: bool
     influence_conversation: true
     mappings:
@@ -80,10 +91,12 @@ slots:
     mappings:
     - type: custom
   amount:
-    type: text
+    type: float
     influence_conversation: true
     mappings:
-    - type: custom
+    - type: from_entity
+      entity: amount
+      not_found_value: unknown
   phone1:
     type: text
     mappings:
@@ -113,7 +126,7 @@ actions:
 - utter_greet
 - utter_default
 - utter_did_that_help
-- utter_compare_models
+- utter_ask_for_preferences
 - utter_ask_user_question
 - utter_ask_what_to_help
 - utter_ask_phone_model
@@ -125,38 +138,51 @@ actions:
 - utter_offer_human_agent
 - utter_out_of_scope_inquiry
 - utter_happy_to_help
+- utter_accept_denial_help
+- utter_ask_for_repair_description
 - action_base
 - validate_compare_phones_form
 - action_compare_phones_form
 - action_compare_phones
-- utter_confirm_comparison
 - utter_ask_phone1
 - utter_ask_phone2
 - action_get_reviews
 - action_process_message
 - action_ask_product_details
 - action_escalate_to_human
+- action_preferred_brand
 - action_get_discounted_models
 - action_check_stock
 responses:
+  utter_ask_for_preferences:
+  - text: Do you have a brand preference (Apple, Samsung, etc..)?
+    buttons:
+    - title: "Apple"
+      payload: "/pref_brand_apple"
+    - title: "Samsung"
+      payload: "/pref_brand_samsung"
+    - title: "OnePlus"
+      payload: "/pref_brand_oneplus"
+    - title: "Xiaomi"
+      payload: "/pref_brand_xiaomi"
+    - title: "No preference"
+      payload: "/pref_brand_none"
+  utter_ask_for_repair_description:
+  - text: "I see you need repairs for your device. Would you like to open a ticket for it?"
   utter_ask_phone1:
   - text: "Please enter the first phone model you want to compare"
   utter_ask_phone2:
   - text: "Now please enter the second phone model to compare"
   utter_ask_phone_model:
   - text: "Please provide a phone model name"
-  utter_confirm_comparison:
-  - text: "Comparing {phone1} vs {phone2}..."
   utter_ask_to_purchase_either:
   - text: Would you like to purchase any one of them?
   utter_ask_what_to_help:
   - text: What can I assist you with?
   utter_ask_user_question:
-  - text: Hello! Can I help you? I am designed for "webshop" which sells mobile phones.
+  - text: Hello! Can I help you with anything? I am designed for "webshop" which sells mobile phones.
   utter_product_details:
   - text: 'Here is a link to the general information about {phone_model}: [Product details](<link_to_{phone_model}_details>)'
-  utter_compare_models:
-  - text: 'The comparison between {phone_comparison}: [Comparison details](<link_to_{phone_comparison}_comparison>)'
   utter_ask_for_budget:
   - text: What is your budget?
   utter_ask_clarify_comparison:
@@ -188,6 +214,8 @@ responses:
   - text: Ok, let's start over
   utter_accept_denial_phone_purchase:
   - text: OK, if you want to purchase a different one, just ask!
+  utter_accept_denial_help:
+  - text: Ok then, if you need help with anything just ask!
   utter_iamabot:
   - text: I am a bot.
   - text: I'm just a virtual assistant, here to help!

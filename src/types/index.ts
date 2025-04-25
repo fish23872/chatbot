@@ -6,6 +6,16 @@ export interface RepairTicket extends RepairData {
   technicianNotes?: string;
 }
 
+export interface MessageType {
+  text: string;
+  isUser: boolean;
+  payload?: RecommendationsData | ComparisonData | RepairData;
+  buttons?: Array<{
+    title: string,
+    payload: string
+  }>
+}
+
 export interface RepairMessageProps {
   data: RepairData;
 }
@@ -45,6 +55,10 @@ export type Phone = {
   };
   
   export type Response = Array<{
+    buttons?: Array<{
+      title: string,
+      payload: string
+    }>
     recipient_id: string;
     custom: {
       payload: 'recommendation' | 'comparison' | 'repairs';

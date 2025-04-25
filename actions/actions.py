@@ -297,7 +297,7 @@ class ActionRecommendByBudget(Action):
             tracker: Tracker,
             domain: dict):
         
-        message = tracker.latest_message.get('text').lower()
+        message = str(tracker.get_slot("amount"))
         
         if "premium" in message:
             return self._handle_premium(dispatcher)
@@ -387,7 +387,7 @@ class ActionRecommendByBudget(Action):
         return []
 
     def _handle_cheap(self, dispatcher):
-        cheap_phones = list(self.db.phones.find({
+        cheap_phones = list(db.phones.find({
             "price": {"$lte": 300},
             "available": True
         }).sort("price", 1).limit(5))
@@ -401,8 +401,7 @@ class ActionRecommendByBudget(Action):
             "payload": "recommendations",
             "data": {
                 "title": "💰 Best Budget Phones",
-                "phones": self._prepare_phone_data(cheap_phones),
-                "badge": "Super Budget" if cheap_phones and cheap_phones[0]['specs']['price'] <= 300 else None
+                "phones": self._prepare_phone_data(cheap_phones)
             }
         })
         return []
@@ -455,19 +454,19 @@ class ActionHandleRepairRequest(Action):
         if phone_data:
             dispatcher.utter_message("Please provide a description for the issue you are having with your device.")
             return [
-                SlotSet("awaiting_repair_description", True),
+                SlotSet("awaiting_description", True),
                 SlotSet("repair_phone_model", normalized_phone),
                 SlotSet("repair_initial_message", tracker.latest_message.get('text'))
             ]
         else:
             dispatcher.utter_message("Sorry, we are unable to provide repair services for this product.")
-            return [SlotSet("awaiting_repair_description", False)]
+            return [SlotSet("awaiting_description", False)]
 class ActionProcessRepairDescription(Action):
     def name(self):
         return "action_process_repair_description"
     
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
-        if not tracker.get_slot("awaiting_repair_description"):
+        if not tracker.get_slot("awaiting_description"):
             return []
             
         user_message = tracker.latest_message.get('text')
@@ -502,7 +501,7 @@ class ActionProcessRepairDescription(Action):
             print(f"Failed to parse LLM response: {e}")
             dispatcher.utter_message(text="Sorry, there was an error processing your repair request")
             
-        return [SlotSet("awaiting_repair_description",  None),
+        return [SlotSet("awaiting_description",  None),
                 SlotSet("repair_phone_model", None),
                 SlotSet("repair_initial_message", None)]
         
@@ -531,3 +530,16 @@ class ActionOutOfScopeInquiry(Action):
             dispatcher.utter_message(text="I'm not sure how to answer that. Could you ask me something about mobile phones?")
             
         return []
+    
+class ActionPreferredBrand(Action):
+    def name(self):
+        return "action_preferred_brand"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        user_message = tracker.latest_message.get("text")
+        if user_message:
+            brand_pref = str(user_message).replace("/pref_brand_", '').capitalize()
+            return [SlotSet("brand_preference", brand_pref)]
+        
+    #TODO: I want to buy phone story: (preferences with llm, price-range, brand preference)
+    #TODO: Limit LLM calls

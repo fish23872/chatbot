@@ -5,16 +5,11 @@ import Message from "./Message";
 import Recommendation from "./Recommendation";
 import { RepairMessage } from "./RepairMessage";
 import { ComparisonMessage } from "./ComparisonMessage";
-import { RecommendationsData, ComparisonData, Response, RepairData } from "@types";
-
-interface Message {
-  text: string;
-  isUser: boolean;
-  payload?: RecommendationsData | ComparisonData | RepairData;
-}
+import { RecommendationsData, ComparisonData, Response, RepairData, MessageType } from "@types";
+import Button from "../Button/Button";
 
 const ChatWindow: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,11 +33,24 @@ const ChatWindow: React.FC = () => {
         }
       ]);
     };
+    const handleButtons = (data: Response) => {
+      setMessages(prev => [
+        ...prev,
+        {
+          isUser: false,
+          payload: undefined,
+          text: data[0].text || "",
+          buttons: data[0].buttons,
+        }
+      ]);
+    }
 
+    socket.on("buttons", handleButtons)
     socket.on("chat_message", handleChatMessage);
     socket.on("data", handleData);
 
     return () => {
+      socket.off("buttons", handleButtons)
       socket.off("chat_message", handleChatMessage);
       socket.off("data", handleData);
     };
@@ -52,35 +60,61 @@ const ChatWindow: React.FC = () => {
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
   };
 
-  const renderMessageContent = (msg: Message, index: number) => {
+
+  const handleButtonClick = (payload: string) => {
+    const cleanedPayload = payload.replace("/pref_brand_", '');
+    const displayText = cleanedPayload.charAt(0).toUpperCase() + cleanedPayload.slice(1);
+    setMessages(prev => [...prev, { 
+      text: displayText, 
+      isUser: true 
+    }]);
+    socket.emit("chat_message", payload);
+  };
+
+  const renderMessageContent = (msg: MessageType, index: number) => {
     if (msg.isUser) {
       return <Message text={msg.text} isUser={true} />;
     }
-
-    if (msg.payload) {
-      if ('phone1' in msg.payload && 'phone2' in msg.payload) {
-        return (
-          <ComparisonMessage 
-            message={{
-              custom: {
-                payload: 'comparison',
-                data: msg.payload as ComparisonData
-              },
-              text: msg.text
-            }} 
-            key={index}
-          />
-        );
-      }
-
-      if (msg.payload && 'urgency' in msg.payload && 'category' in msg.payload) {
-        return <RepairMessage data={msg.payload as RepairData} key={index} />;
-      }
-
-      return <Recommendation data={msg.payload as RecommendationsData} key={index} />;
-    }
-
-    return <Message text={msg.text} isUser={false} key={index} />;
+  
+    return (
+      <div className="message-container">
+        {msg.text && <Message text={msg.text} isUser={false} key={index}/>}
+      
+        {msg.buttons && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {msg.buttons.map((button, buttonIndex) => (
+              <Button
+                key={buttonIndex}
+                buttonText={button.title}
+                onClick={() => handleButtonClick(button.payload)}
+                variant="primary"
+                className="text-white"
+              />
+            ))}
+          </div>
+        )}
+        {msg.payload && (
+          <>
+            {('phone1' in msg.payload && 'phone2' in msg.payload) ? (
+              <ComparisonMessage 
+                message={{
+                  custom: {
+                    payload: 'comparison',
+                    data: msg.payload as ComparisonData
+                  },
+                  text: msg.text
+                }}
+                key={index}
+              />
+            ) : (msg.payload && 'urgency' in msg.payload && 'category' in msg.payload) ? (
+              <RepairMessage data={msg.payload as RepairData} key={index} />
+            ) : (
+              <Recommendation data={msg.payload as RecommendationsData} key={index} />
+            )}
+          </>
+        )}
+      </div>
+    );
   };
 
   return (

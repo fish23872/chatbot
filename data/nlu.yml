@@ -219,3 +219,15 @@ nlu:
     - [iphone 15 pro max](phone_model)
     - [Samsung galaxy s23 ultra](phone_model)
     - [onePlus 10 pro](phone_model)
+- intent: out_of_scope
+  examples: |
+    - What's the meaning of life?
+    - Tell me a joke
+    - Who won the World Cup in 2022?
+    - How do I cook pasta?
+    - Recommend a Netflix show
+    - Explain quantum physics
+    - What's your favorite color?
+    - Should I get a cat or dog?
+    - What's the weather like?
+    - News about Bitcoin today

@@ -33,13 +33,14 @@ async def chat_message(sid, data):
         response = process_message.process_messages(data)
         
         print(f"Response: {response}")
-        if "custom" in response[0]:
+        if "buttons" in response[0]:
+            await sio.emit("buttons", response)
+        elif "custom" in response[0]:
             await sio.emit("data", response)
         else:
             await sio.emit("chat_message", response)
         # return the message (testing)
     except asyncio.TimeoutError as e:
         print(f"Error: {e}")
-    
 if __name__ == "__main__":
     uvicorn.run(app_asgi, host="0.0.0.0", port=8000)
