@@ -1,5 +1,5 @@
 import React from 'react';
-import Message from './Message';
+import Message from '../Message';
 import { PhoneCard } from './PhoneCard';
 import { ComparisonPayload } from '@types';
 

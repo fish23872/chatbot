@@ -2,7 +2,9 @@
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {
-      "@types": ["types/index.ts"]
+      "@types": ["types/index.ts"],
+      "@utils": ["utils/*"],
+      "@contexts": ["contexts/*"]
     },
     "strict": true
   },

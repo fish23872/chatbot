@@ -21,6 +21,7 @@ nlu:
     - I'd like to buy a phone
     - I want to buy a smartphone please
     - Recommend me a mobile phone
+    - i want to buy a phone
 - intent: provide_budget
   examples: |
     - premium
@@ -36,6 +37,7 @@ nlu:
     - below [600](amount)
     - up to [800](amount)
     - budget is [450](amount)
+    - under [1000](amount)
 - intent: provide_preferences
   examples: |
     - good camera and battery
@@ -50,7 +52,7 @@ nlu:
     - durable build
 - intent: compare_phones_form_starter
   examples: |
-    - Can you compare two models for me 
+    - Can you compare two models for me
     - I want to compare to phones
     - Compare two models
     - Compare

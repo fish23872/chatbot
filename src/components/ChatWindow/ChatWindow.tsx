@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import socket from "../../utils/socket";
 import InputForm from "./InputForm";
 import Message from "./Message";
-import Recommendation from "./Recommendation";
-import { RepairMessage } from "./RepairMessage";
-import { ComparisonMessage } from "./ComparisonMessage";
+import Recommendation from "./Cards/Recommendation";
+import { RepairMessage } from "./Cards/RepairMessage";
+import { ComparisonMessage } from "./Cards/ComparisonMessage";
 import { RecommendationsData, ComparisonData, Response, RepairData, MessageType } from "@types";
 import Button from "../Button/Button";
 

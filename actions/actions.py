@@ -7,7 +7,6 @@ from .utils.database import MongoDB
 import re
 import json
 
-FALLBACK_COUNTER = 0
 db = MongoDB()
 class BasePhoneAction(Action):
     def name(self):
@@ -442,6 +441,85 @@ class ActionComparePhonesForm(FormValidationAction):
     def compare_models(self, phone1, phone2):
         return f"Comparison results:\n{phone1} vs {phone2}\n\n[Specs comparison would go here]"
 
+class ActionHandleUseCaseRequest(Action):
+    def name(self):
+        return "action_handle_usecase"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        amount = tracker.get_slot("amount")
+        brand_preference = tracker.get_slot("brand_preference")
+        
+        if amount and brand_preference:
+            dispatcher.utter_message(
+                text="How will you primarily use your new phone? If you want to describe your own use-case, choose \"Describe my own\"",
+                buttons=[
+                    {"payload": "/photography", "title": "Photography"},
+                    {"payload": "/gaming", "title": "Gaming"},
+                    {"payload": "/general", "title": "General"},
+                    {"payload": "/own", "title": "Describe in my own words..."}
+                ]
+            )
+        else:
+            dispatcher.utter_message("Sorry, there has been an issue with providing budget or brand preference for your product.")
+            
+class ActionHandleUseCaseDescription(Action):
+    def name(self):
+        return "action_handle_usecase_description"
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        amount = tracker.get_slot("amount")
+        brand_preference = tracker.get_slot("brand_preference")
+        
+        if amount and brand_preference:
+            dispatcher.utter_message(
+                text="Please provide a description for your use-case")
+            return [SlotSet("awaiting_usecase_description", True)]
+        else:
+            dispatcher.utter_message("Sorry, there has been an issue with providing budget or brand preference for your product.")
+            return [SlotSet("awaiting_usecase_description", None)]
+        
+            
+class ActionProcessUseCaseDescription(Action):
+    def name(self):
+        return "action_process_usecase_description"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        user_message = tracker.latest_message.get('text')
+        
+        if not tracker.get_slot("awaiting_usecase_description"):
+            return []   
+        
+        prompt = f"""Extract exactly ONE word from this text that describes phone usage. 
+        ONLY respond with one of these exact words:
+        - photography
+        - gaming
+        - business
+        - social_media
+        - general (if none match)
+
+        Input: {user_message}"""
+        
+        response = LlmActions.create_response(prompt)
+        
+        return [SlotSet("awaiting_usecase_description", None),
+                SlotSet("usecase_description", response)]
+
+class ActionSetSlotUseCase(Action):
+    def name(self):
+        return "action_set_slot_usecase"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        brand_preference = tracker.get_slot("brand_preference")
+        budget_amount = tracker.get_slot("amount")
+        usecase_description = tracker.get_slot("usecase_description")
+        user_message = tracker.latest_message.get("text")
+        
+        if not usecase_description:
+            if brand_preference and budget_amount:
+                return[SlotSet("usecase", user_message)]
+            else:
+                dispatcher.utter_message("Sorry, there has been an issue with providing budget or brand preference for your product.")
+                return [SlotSet("amount", None), SlotSet("brand_preference", None), SlotSet("usecase", user_message)]
+
 class ActionHandleRepairRequest(Action):
     def name(self):
         return "action_handle_repairs"
@@ -454,19 +532,19 @@ class ActionHandleRepairRequest(Action):
         if phone_data:
             dispatcher.utter_message("Please provide a description for the issue you are having with your device.")
             return [
-                SlotSet("awaiting_description", True),
+                SlotSet("awaiting_repair_description", True),
                 SlotSet("repair_phone_model", normalized_phone),
                 SlotSet("repair_initial_message", tracker.latest_message.get('text'))
             ]
         else:
             dispatcher.utter_message("Sorry, we are unable to provide repair services for this product.")
-            return [SlotSet("awaiting_description", False)]
+            return [SlotSet("awaiting_repair_description", False)]
 class ActionProcessRepairDescription(Action):
     def name(self):
         return "action_process_repair_description"
     
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
-        if not tracker.get_slot("awaiting_description"):
+        if not tracker.get_slot("awaiting_repair_description"):
             return []
             
         user_message = tracker.latest_message.get('text')
@@ -501,7 +579,7 @@ class ActionProcessRepairDescription(Action):
             print(f"Failed to parse LLM response: {e}")
             dispatcher.utter_message(text="Sorry, there was an error processing your repair request")
             
-        return [SlotSet("awaiting_description",  None),
+        return [SlotSet("awaiting_repair_description",  None),
                 SlotSet("repair_phone_model", None),
                 SlotSet("repair_initial_message", None)]
         
@@ -531,7 +609,7 @@ class ActionOutOfScopeInquiry(Action):
             
         return []
     
-class ActionPreferredBrand(Action):
+class ActionSetSlotPreferredBrand(Action):
     def name(self):
         return "action_preferred_brand"
     

@@ -26,6 +26,11 @@ intents:
 - pref_brand_oneplus
 - pref_brand_xiaomi
 - pref_brand_none
+- general
+- own
+- gaming
+- photography
+
 forms:
   compare_phones_form:
     required_slots:
@@ -39,17 +44,32 @@ entities:
 - phone2
 - urgency
 - issue_type
-- awaiting_description
+- awaiting_repair_description
+- awaiting_usecase_description
 - repair_phone_model
 - repair_initial_message
 - repair_description
 - brand_preference
+- usecase_description
 slots:
+  usecase:
+    type: text
+    mappings:
+    - type: custom
+  usecase_description:
+    type: text
+    mappings:
+    - type: custom
   brand_preference:
     type: text
     mappings:
     - type: custom
-  awaiting_description:
+  awaiting_repair_description:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
+  awaiting_usecase_description:
     type: bool
     influence_conversation: true
     mappings:
@@ -152,6 +172,11 @@ actions:
 - action_escalate_to_human
 - action_preferred_brand
 - action_get_discounted_models
+- action_process_usecase_description
+- action_handle_usecase
+- utter_ask_for_usecase_description
+- action_handle_usecase_description
+- action_set_slot_usecase
 - action_check_stock
 responses:
   utter_ask_for_preferences:
@@ -167,6 +192,8 @@ responses:
       payload: "/pref_brand_xiaomi"
     - title: "No preference"
       payload: "/pref_brand_none"
+  utter_ask_for_usecase_description:
+  - text: "Would you like to give a description for your use-case?"
   utter_ask_for_repair_description:
   - text: "I see you need repairs for your device. Would you like to open a ticket for it?"
   utter_ask_phone1:

@@ -1,4 +1,4 @@
-import { useTickets } from "../../contexts/TicketsContext";
+import { useTickets } from "../../../contexts/TicketsContext";
 import { useNavigate } from "react-router-dom";
 import { RepairMessageProps } from "@types";
 
