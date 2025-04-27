@@ -13,6 +13,295 @@ stories:
   - action: action_escalate_to_human
   - action: action_restart
 
+# TODO: Handle text budgets (cheap, expensive), action_recommend_by_budget implementation (preference, brands), maybe price-range
+
+- story: i want to buy phone, no brand, deny description
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '1000'
+  - slot_was_set:
+    - amount: '1000'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_none
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: None
+  - action: utter_ask_for_usecase_description
+  - intent: deny
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, xiaomi brand, deny description
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '500'
+  - slot_was_set:
+    - amount: '500'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_xiaomi
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Xiaomi
+  - action: utter_ask_for_usecase_description
+  - intent: deny
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, oneplus brand, deny description
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '900'
+  - slot_was_set:
+    - amount: '900'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_oneplus
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Oneplus
+  - action: utter_ask_for_usecase_description
+  - intent: deny
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, samsung brand, deny description
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '400'
+  - slot_was_set:
+    - amount: '400'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_samsung
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Samsung
+  - action: utter_ask_for_usecase_description
+  - intent: deny
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, apple brand, deny description
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '1500'
+  - slot_was_set:
+    - amount: '1500'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_apple
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Apple
+  - action: utter_ask_for_usecase_description
+  - intent: deny
+  - action: action_recommend_by_budget
+
+
+- story: i want to buy phone, samsung brand, affirm description, intent own
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '800'
+  - slot_was_set:
+    - amount: '800'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_samsung
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Samsung
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: own
+  - action: action_handle_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: true
+  - intent: nlu_fallback
+  - action: action_process_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: null
+  - slot_was_set:
+    - usecase_description: gaming
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, apple brand, affirm description, intent own
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '800'
+  - slot_was_set:
+    - amount: '800'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_apple
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Apple
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: own
+  - action: action_handle_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: true
+  - intent: nlu_fallback
+  - action: action_process_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: null
+  - slot_was_set:
+    - usecase_description: photography
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, oneplus brand, affirm description, intent own
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '800'
+  - slot_was_set:
+    - amount: '800'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_oneplus
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Oneplus
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: own
+  - action: action_handle_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: true
+  - intent: nlu_fallback
+  - action: action_process_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: null
+  - slot_was_set:
+    - usecase_description: photography
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, xiaomi brand, affirm description, intent own
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '800'
+  - slot_was_set:
+    - amount: '800'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_xiaomi
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: xiaomi
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: own
+  - action: action_handle_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: true
+  - intent: nlu_fallback
+  - action: action_process_usecase_description
+  - slot_was_set:
+    - awaiting_usecase_description: null
+  - slot_was_set:
+    - usecase_description: photography
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, apple brand, affirm description, intent general
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '750'
+  - slot_was_set:
+    - amount: '750'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_apple
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Apple
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: general
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, samsung brand, affirm description, intent photography
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '750'
+  - slot_was_set:
+    - amount: '750'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_samsung
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Samsung
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: photography
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, oneplus brand, affirm description, intent photography
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '750'
+  - slot_was_set:
+    - amount: '750'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_oneplus
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Oneplus
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: photography
+  - action: action_recommend_by_budget
+
+- story: i want to buy phone, xiaomi brand, affirm description, intent gaming
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities:
+    - amount: '550'
+  - slot_was_set:
+    - amount: '550'
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_xiaomi
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: Xiaomi
+  - action: utter_ask_for_usecase_description
+  - intent: affirm
+  - action: action_handle_usecase
+  - intent: gaming
+  - action: action_recommend_by_budget
+
 - story: buying a valid phone model
   steps:
   - intent: ask_price

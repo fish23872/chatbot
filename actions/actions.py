@@ -619,5 +619,4 @@ class ActionSetSlotPreferredBrand(Action):
             brand_pref = str(user_message).replace("/pref_brand_", '').capitalize()
             return [SlotSet("brand_preference", brand_pref)]
         
-    #TODO: I want to buy phone story: (preferences with llm, price-range, brand preference)
     #TODO: Limit LLM calls
