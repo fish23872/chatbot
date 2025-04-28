@@ -1,5 +1,7 @@
 services:
   bot:
+    env_file:
+      - .env
     build: ./bot
     ports:
       - "5005:5005"

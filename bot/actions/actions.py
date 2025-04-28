@@ -292,11 +292,19 @@ class ActionRecommendByBudget(Action):
     def name(self):
         return "action_recommend_by_budget"
 
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: dict):
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         
         message = str(tracker.get_slot("amount"))
+        brand_preference = tracker.get_slot("brand_preference")
+        usecase = tracker.get_slot("usecase_description")
+        
+        if brand_preference and usecase:
+            print(brand_preference)
+            print(usecase)
+        elif brand_preference:
+            print(brand_preference)
+        else:
+            print(usecase)
         
         if "premium" in message:
             return self._handle_premium(dispatcher)
