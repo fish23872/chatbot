@@ -32,6 +32,7 @@ stories:
   - action: utter_ask_for_usecase_description
   - intent: deny
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, xiaomi brand, deny description
   steps:
@@ -50,6 +51,7 @@ stories:
   - action: utter_ask_for_usecase_description
   - intent: deny
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, oneplus brand, deny description
   steps:
@@ -68,6 +70,7 @@ stories:
   - action: utter_ask_for_usecase_description
   - intent: deny
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, samsung brand, deny description
   steps:
@@ -86,6 +89,7 @@ stories:
   - action: utter_ask_for_usecase_description
   - intent: deny
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, apple brand, deny description
   steps:
@@ -104,6 +108,7 @@ stories:
   - action: utter_ask_for_usecase_description
   - intent: deny
   - action: action_recommend_by_budget
+  - action: action_restart
 
 
 - story: i want to buy phone, samsung brand, affirm description, intent own
@@ -134,6 +139,7 @@ stories:
   - slot_was_set:
     - usecase_description: gaming
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, apple brand, affirm description, intent own
   steps:
@@ -163,6 +169,7 @@ stories:
   - slot_was_set:
     - usecase_description: photography
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, oneplus brand, affirm description, intent own
   steps:
@@ -192,6 +199,7 @@ stories:
   - slot_was_set:
     - usecase_description: photography
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, xiaomi brand, affirm description, intent own
   steps:
@@ -221,6 +229,7 @@ stories:
   - slot_was_set:
     - usecase_description: photography
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, apple brand, affirm description, intent general
   steps:
@@ -241,6 +250,7 @@ stories:
   - action: action_handle_usecase
   - intent: general
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, samsung brand, affirm description, intent photography
   steps:
@@ -261,6 +271,7 @@ stories:
   - action: action_handle_usecase
   - intent: photography
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, oneplus brand, affirm description, intent photography
   steps:
@@ -281,6 +292,7 @@ stories:
   - action: action_handle_usecase
   - intent: photography
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: i want to buy phone, xiaomi brand, affirm description, intent gaming
   steps:
@@ -301,6 +313,7 @@ stories:
   - action: action_handle_usecase
   - intent: gaming
   - action: action_recommend_by_budget
+  - action: action_restart
 
 - story: buying a valid phone model
   steps:

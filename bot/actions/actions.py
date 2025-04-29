@@ -298,25 +298,17 @@ class ActionRecommendByBudget(Action):
         brand_preference = tracker.get_slot("brand_preference")
         usecase = tracker.get_slot("usecase_description")
         
-        if brand_preference and usecase:
-            print(brand_preference)
-            print(usecase)
-        elif brand_preference:
-            print(brand_preference)
-        else:
-            print(usecase)
-        
         if "premium" in message:
-            return self._handle_premium(dispatcher)
+            return self._handle_premium(dispatcher, brand_preference, usecase)
         elif any(term in message for term in ["no budget", "unlimited", "no limit"]):
-            return self._handle_unlimited(dispatcher)
+            return self._handle_unlimited(dispatcher, brand_preference, usecase)
         elif any(term in message for term in ["cheap", "budget", "affordable", "economy"]):
-            return self._handle_cheap(dispatcher)
+            return self._handle_cheap(dispatcher, brand_preference, usecase)
             
         amounts = re.findall(r'\d+', message)
         if amounts:
             max_price = int(amounts[0])
-            return self._handle_numerical_budget(dispatcher, max_price)
+            return self._handle_numerical_budget(dispatcher, max_price, brand_preference, usecase)
             
         dispatcher.utter_message("Please specify a budget amount or range.")
         return []
@@ -335,11 +327,33 @@ class ActionRecommendByBudget(Action):
             for doc in phone_docs
         ]
 
-    def _handle_numerical_budget(self, dispatcher, max_price):
-        eligible_phones = list(db.phones.find({
+    def _build_query(self, base_query, brand_preference, usecase):
+        if brand_preference:
+            brand_patterns = {
+                "apple": "iPhone|Apple",
+                "samsung": "Samsung",
+                "xiaomi": "Xiaomi",
+                "oneplus": "OnePlus",
+            }
+            pattern = brand_patterns.get(brand_preference.lower())
+            if pattern:
+                base_query["normalized_name"] = {"$regex": pattern, "$options": "i"}
+        if usecase:
+            if usecase == "photography":
+                base_query["key_features"] = {"$elemMatch": {"$regex": "camera|megapixel|MP", "$options": "i"}}
+            elif usecase == "gaming":
+                base_query["key_features"] = {"$elemMatch": {"$regex": "chipset|Snapdragon|Dimensity|processor", "$options": "i"}}
+            elif usecase == "business":
+                base_query["key_features"] = {"$elemMatch": {"$regex": "battery|mAh", "$options": "i"}}
+        return base_query
+
+    def _handle_numerical_budget(self, dispatcher, max_price, brand_preference, usecase):
+        query = {
             "price": {"$lte": max_price},
             "available": True
-        }).sort([
+        }
+        query = self._build_query(query, brand_preference, usecase)
+        eligible_phones = list(db.phones.find(query).sort([
             ("review_score", -1),
             ("price", 1)
         ]).limit(5))
@@ -348,20 +362,31 @@ class ActionRecommendByBudget(Action):
             dispatcher.utter_message(f"No phones found under ${max_price}. Try increasing your budget by $100-200?")
             return []
         
-        dispatcher.utter_message(json_message={
-            "payload": "recommendations",
-            "data": {
-                "title": f"Top {len(eligible_phones)} phones under ${max_price}",
-                "phones": self._prepare_phone_data(eligible_phones)
-            }
-        })
+        if brand_preference:
+            dispatcher.utter_message(json_message={
+                "payload": "recommendations",
+                "data": {
+                    "title": f"Top {len(eligible_phones)} {brand_preference} phones under ${max_price}",
+                    "phones": self._prepare_phone_data(eligible_phones)
+                }
+            })
+        else:
+            dispatcher.utter_message(json_message={
+                "payload": "recommendations",
+                "data": {
+                    "title": f"Top {len(eligible_phones)} phones under ${max_price}",
+                    "phones": self._prepare_phone_data(eligible_phones)
+                }
+            })
         return []
 
-    def _handle_premium(self, dispatcher):
-        premium_phones = list(db.phones.find({
+    def _handle_premium(self, dispatcher, brand_preference, usecase):
+        query = {
             "price": {"$gte": 1000},
             "available": True
-        }).sort([
+        }
+        query = self._build_query(query, brand_preference, usecase)
+        premium_phones = list(db.phones.find(query).sort([
             ("review_score", -1),
             ("price", 1)
         ]).limit(5))
@@ -375,10 +400,12 @@ class ActionRecommendByBudget(Action):
         })
         return []
 
-    def _handle_unlimited(self, dispatcher):
-        all_phones = list(db.phones.find({
+    def _handle_unlimited(self, dispatcher, brand_preference, usecase):
+        query = {
             "available": True
-        }).sort([
+        }
+        query = self._build_query(query, brand_preference, usecase)
+        all_phones = list(db.phones.find(query).sort([
             ("review_score", -1),
             ("price", 1)
         ]).limit(5))
@@ -393,16 +420,20 @@ class ActionRecommendByBudget(Action):
         })
         return []
 
-    def _handle_cheap(self, dispatcher):
-        cheap_phones = list(db.phones.find({
+    def _handle_cheap(self, dispatcher, brand_preference, usecase):
+        query = {
             "price": {"$lte": 300},
             "available": True
-        }).sort("price", 1).limit(5))
+        }
+        query = self._build_query(query, brand_preference, usecase)
+        cheap_phones = list(db.phones.find(query).sort("price", 1).limit(5))
         
         if not cheap_phones:
-            cheap_phones = list(db.phones.find({
+            query = {
                 "available": True
-            }).sort("price", 1).limit(5))
+            }
+            query = self._build_query(query, brand_preference, usecase)
+            cheap_phones = list(db.phones.find(query).sort("price", 1).limit(5))
         
         dispatcher.utter_message(json_message={
             "payload": "recommendations",
