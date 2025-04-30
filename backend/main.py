@@ -3,29 +3,29 @@ from fastapi.middleware.cors import CORSMiddleware
 import asyncio
 import socketio
 import uvicorn
-import process_message  # Import the process_message function
+import process_message
+from auth_routes import router as auth_router
 
-app = FastAPI()
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins="*") 
-# asgi is used for compatibility with FastAPI
-# for now any connection is allowed (*)
+app = FastAPI(title="Chatbot CS API", version="0.1.0")
 
-app_asgi = socketio.ASGIApp(sio, app)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-) # any headers, methods, and connections are allowed (this might be changed later)
+)
+app.include_router(auth_router)
 
-# event handlers
+sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins="*")
+app_asgi = socketio.ASGIApp(sio, app)
+
 @sio.event
 async def connect(sid, environ):
-    print(f"Client connected: {sid}") # prints a message when a client is connected
+    print(f"Client connected: {sid}")
 @sio.event
 async def disconnect(sid):
-    print(f"Client disconnected: {sid}") # prints when there is a disconnection
+    print(f"Client disconnected: {sid}")
 @sio.event
 async def chat_message(sid, data):
     try:
@@ -34,13 +34,12 @@ async def chat_message(sid, data):
         
         print(f"Response: {response}")
         if "buttons" in response[0]:
-            await sio.emit("buttons", response)
+            await sio.emit("buttons", response, room=sid)
         elif "custom" in response[0]:
-            await sio.emit("data", response)
+            await sio.emit("data", response, room=sid)
         else:
-            await sio.emit("chat_message", response)
-        # return the message (testing)
+            await sio.emit("chat_message", response, room=sid)
     except asyncio.TimeoutError as e:
         print(f"Error: {e}")
 if __name__ == "__main__":
-    uvicorn.run(app_asgi, host="0.0.0.0", port=8000)
+    uvicorn.run(app_asgi, host="0.0.0.0", port=8000, reload=True)

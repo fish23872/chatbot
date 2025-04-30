@@ -5,6 +5,8 @@ import InputForm from "./InputForm";
 import ChatMessage from "./ChatMessage";
 import { Response, MessageType } from "@types";
 
+
+// TODO: fix Can't reach ticket pages on URL
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
