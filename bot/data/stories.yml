@@ -596,3 +596,19 @@ stories:
   - slot_was_set:
     - issue_type: "screen"
     - urgency: "urgent"
+
+- story: happy path repair flow 2
+  steps:
+  - intent: request_repairs
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+  - action: utter_ask_for_repair_description
+  - intent: affirm
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "charging"
+    - urgency: "standard"

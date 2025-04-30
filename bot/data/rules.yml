@@ -1,6 +1,11 @@
 version: "3.1"
 
 rules:
+- rule: cancellation
+  steps:
+    - intent: cancel
+    - action: utter_accept_denial_help
+    - action: action_restart
 - rule: out of scope answers
   steps:
     - intent: out_of_scope

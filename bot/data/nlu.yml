@@ -9,7 +9,19 @@ nlu:
     - Tell me about screen resolution
     - What does IP68 mean?
     - What do you know about batteries?
-
+- intent: cancel
+  examples: |
+    - Cancel my request
+    - I want to cancel that
+    - I've changed my mind
+    - Never mind
+    - Stop the process
+    - Cancel the order
+    - Abort the action
+    - Forget it
+    - Please cancel
+    - I'd like to cancel
+    - Undo
 - intent: battery_problem
   examples: |
     - my phone battery drains too fast
@@ -103,7 +115,6 @@ nlu:
     - I'd like to buy a phone
     - I want to buy a smartphone please
     - Recommend me a mobile phone
-    - i want to buy a phone
 - intent: provide_budget
   examples: |
     - premium
