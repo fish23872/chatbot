@@ -515,8 +515,7 @@ class ActionHandleUseCaseDescription(Action):
         else:
             dispatcher.utter_message("Sorry, there has been an issue with providing budget or brand preference for your product.")
             return [SlotSet("awaiting_usecase_description", None)]
-        
-            
+                
 class ActionProcessUseCaseDescription(Action):
     def name(self):
         return "action_process_usecase_description"
@@ -569,7 +568,7 @@ class ActionHandleRepairRequest(Action):
         phone_data = db.get_phone(normalized_phone) if normalized_phone else None
         
         if phone_data:
-            dispatcher.utter_message("Please provide a description for the issue you are having with your device.")
+            dispatcher.utter_message("Please provide an accurate description for the issue you are having with your device.")
             return [
                 SlotSet("awaiting_repair_description", True),
                 SlotSet("repair_phone_model", normalized_phone),
@@ -647,6 +646,23 @@ class ActionOutOfScopeInquiry(Action):
             dispatcher.utter_message(text="I'm not sure how to answer that. Could you ask me something about mobile phones?")
             
         return []
+    
+class ActionAnswerTechTerm(Action):
+    def name(self):
+        return "action_answer_tech_term"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        user_message = tracker.latest_message.get("text")
+        
+        if user_message:
+            prompt = f"""
+            You are an tech expert. Explain the following question in 3-4 sentences.
+            Question: {user_message}
+            """
+            response = LlmActions.create_response(prompt=prompt)
+            dispatcher.utter_message(response)
+        else:
+            dispatcher.utter_message("I could not give an answer for this question at the moment.")
     
 class ActionSetSlotPreferredBrand(Action):
     def name(self):

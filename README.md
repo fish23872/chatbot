@@ -1,11 +1,7 @@
 # To run the application:
 
 ```sh
-cd backend
-uvicorn main:app_asgi --host 0.0.0.0 --port 8000
-```
-```sh
-yarn run dev
+docker-compose up
 ```
 ## The objective of this project is to build an AI-powered chatbot.
 

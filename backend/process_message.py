@@ -9,6 +9,9 @@ def process_messages(message: str):
         rasa_response = requests.post(RASA_URL, json=rasa_payload)
         rasa_response.raise_for_status()
         rasa_data = rasa_response.json()
+        
+        if not rasa_data:
+            return "There was no answer. Please come back later."
         if "buttons" in rasa_data[0]:
             return rasa_data
         elif "text" in rasa_data[0]:

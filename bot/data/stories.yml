@@ -397,6 +397,190 @@ stories:
       entities: []
     - action: action_out_of_scope_inquiry
 
+- story: battery issue accept
+  steps:
+  - intent: battery_problem
+  - action: utter_battery_issue_tip
+  - intent: affirm
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+    entities: 
+    - phone_model: "Oneplus Nord 3"
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "battery"
+    - urgency: "urgent"
+
+- story: connectivity issue accept
+  steps:
+  - intent: connectivity_problem
+  - action: utter_connectivity_issue_tip
+  - intent: affirm
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+    entities: 
+    - phone_model: "Iphone 13 pro max"
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "other"
+    - urgency: "standard"
+
+- story: screen issue accept
+  steps:
+  - intent: screen_problem
+  - action: utter_screen_damage_tip
+  - intent: affirm
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+    entities: 
+    - phone_model: "s25"
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "screen"
+    - urgency: "urgent"
+
+- story: performance issue accept
+  steps:
+  - intent: performance_problem
+  - action: utter_performance_issue_tip
+  - intent: affirm
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+    entities: 
+    - phone_model: "Redmi 12c"
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "other"
+    - urgency: "standard"
+
+- story: camera or audio issue accept
+  steps:
+  - intent: camera_or_audio_problem
+  - action: utter_camera_or_audio_issue_tip
+  - intent: affirm
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+    entities: 
+    - phone_model: "iPhone 12"
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "other"
+    - urgency: "standard"
+
+- story: charging issue accept
+  steps:
+  - intent: charging_problem
+  - action: utter_charging_issue_tip
+  - intent: affirm
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+    entities: 
+    - phone_model: "Redmi 12c"
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "charging"
+    - urgency: "urgent"
+
+- story: software issue accept
+  steps:
+  - intent: update_or_software_problem
+  - action: utter_software_issue_tip
+  - intent: affirm
+  - action: utter_ask_for_phone_model_for_repairs
+  - intent: inform
+    entities: 
+    - phone_model: "Samsung s24"
+  - action: action_handle_repairs
+  - slot_was_set:
+    - awaiting_repair_description: true
+  - action: action_listen
+  - action: action_process_repair_description
+  - slot_was_set:
+    - issue_type: "other"
+    - urgency: "standard"
+
+- story: software issue deny
+  steps:
+  - intent: update_or_software_problem
+  - action: utter_software_issue_tip
+  - intent: deny
+  - action: utter_accept_denial_help
+  - action: action_restart
+
+- story: battery issue deny
+  steps:
+  - intent: battery_problem
+  - action: utter_battery_issue_tip
+  - intent: deny
+  - action: utter_accept_denial_help
+  - action: action_restart
+
+- story: camera issue deny
+  steps:
+  - intent: camera_or_audio_problem
+  - action: utter_camera_or_audio_issue_tip
+  - intent: deny
+  - action: utter_accept_denial_help
+  - action: action_restart
+
+- story: screen issue deny
+  steps:
+  - intent: screen_problem
+  - action: utter_screen_damage_tip
+  - intent: deny
+  - action: utter_accept_denial_help
+  - action: action_restart
+
+- story: charging issue deny
+  steps:
+  - intent: charging_problem
+  - action: utter_charging_issue_tip
+  - intent: deny
+  - action: utter_accept_denial_help
+  - action: action_restart
+
+- story: connectivity issue deny
+  steps:
+  - intent: connectivity_problem
+  - action: utter_connectivity_issue_tip
+  - intent: deny
+  - action: utter_accept_denial_help
+  - action: action_restart
+
+- story: sad path repair flow
+  steps:
+  - intent: request_repairs
+    entities:
+    - phone_model: "s24"
+  - action: utter_ask_for_repair_description
+  - intent: deny
+  - action: utter_accept_denial_help
+  - action: action_restart
+
 - story: happy path repair flow
   steps:
   - intent: request_repairs
@@ -412,13 +596,3 @@ stories:
   - slot_was_set:
     - issue_type: "screen"
     - urgency: "urgent"
-
-- story: sad path repair flow
-  steps:
-  - intent: request_repairs
-    entities:
-    - phone_model: "s24"
-  - action: utter_ask_for_repair_description
-  - intent: deny
-  - action: utter_accept_denial_help
-  - action: action_restart

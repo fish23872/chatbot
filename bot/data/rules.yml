@@ -13,6 +13,10 @@ rules:
     - slot_was_set:
       - phone_model
     - action: utter_product_details
+- rule: Answer tech term questions
+  steps:
+    - intent: ask_tech_term
+    - action: action_answer_tech_term
 
 - rule: Say goodbye anytime the user says goodbye
   steps:

@@ -1,13 +1,95 @@
 version: "3.1"
 nlu:
+- intent: ask_tech_term
+  examples: |
+    - What is mAh?
+    - Explain 120Hz
+    - What's AMOLED?
+    - I don't know what refresh rate is
+    - Tell me about screen resolution
+    - What does IP68 mean?
+    - What do you know about batteries?
+
+- intent: battery_problem
+  examples: |
+    - my phone battery drains too fast
+    - why does my phone die so quickly?
+    - the battery doesn’t last even a day
+    - battery is draining overnight
+    - phone is always low on battery
+    - battery life is terrible
+    - I charge my phone twice a day
+    - how do I improve battery performance?
+- intent: connectivity_problem
+  examples: |
+    - I can't connect to Wi-Fi
+    - mobile data is not working
+    - phone isn’t showing any networks
+    - Bluetooth won't pair
+    - hotspot is not turning on
+    - connection keeps dropping
+    - signal is really weak
+    - Wi-Fi works on my laptop but not my phone
+- intent: screen_problem
+  examples: |
+    - my screen is cracked
+    - touchscreen doesn’t respond sometimes
+    - the display is flickering
+    - screen has dead pixels
+    - my phone screen is black
+    - I dropped my phone and the screen is not working
+    - screen freezes randomly
+    - display is very dim even at full brightness
+- intent: performance_problem
+  examples: |
+    - my phone is so slow
+    - apps keep crashing
+    - phone freezes a lot
+    - there's a huge lag when I open apps
+    - it takes forever to load anything
+    - phone slows down after using for a while
+    - why is my phone laggy?
+    - games run very badly on my phone
+- intent: camera_or_audio_problem
+  examples: |
+    - the camera doesn’t open
+    - photos are coming out blurry
+    - front camera isn't working
+    - there's no sound in recordings
+    - mic is not picking up my voice
+    - speaker volume is too low
+    - I can’t hear people during calls
+    - camera app keeps crashing
+- intent: charging_problem
+  examples: |
+    - phone isn’t charging
+    - it says charging but battery doesn't go up
+    - charger keeps disconnecting
+    - phone charges very slowly
+    - only charges when turned off
+    - charging port feels loose
+    - phone heats up while charging
+    - I tried a new cable, still won’t charge
+- intent: update_or_software_problem
+  examples: |
+    - my phone won’t update
+    - error during software update
+    - update made things worse
+    - system update is stuck
+    - can't install the latest version
+    - phone crashes after the update
+    - how do I check for updates?
+    - latest update caused issues
 - intent: request_repairs
   examples: |
-    - My [iPhone 15](phone_model) screen is broken
-    - Need battery replacement for [Samsung S23](phone_model)
-    - [Redmi 12C](phone_model) fell in water
-    - The charging port isn't working
-    - Back glass repair needed
-    - it is broken
+    - I need repairs for my phone
+    - Can you fix my phone?
+    - Please repair my [iPhone 15](phone_model)
+    - My phone is broken, can you help?
+    - I need a phone repair
+    - Fix my mobile phone
+    - I want to send my phone for repair
+    - I need to get my phone fixed
     - I need repairs for my mobile phone
     - It's not working properly
     - Repairs please for my [Iphone 13 pro max](phone_model)

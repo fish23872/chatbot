@@ -1,6 +1,14 @@
 version: '3.1'
 intents:
 - affirm
+- battery_problem
+- connectivity_problem
+- screen_problem
+- performance_problem
+- camera_or_audio_problem
+- update_or_software_problem
+- charging_problem
+- ask_tech_term
 - request_repairs
 - ask_availability
 - ask_for_discounts
@@ -178,7 +186,32 @@ actions:
 - action_handle_usecase_description
 - action_set_slot_usecase
 - action_check_stock
+- utter_battery_issue_tip
+- utter_screen_damage_tip
+- utter_connectivity_issue_tip
+- utter_camera_or_audio_issue_tip
+- utter_charging_issue_tip
+- utter_performance_issue_tip
+- utter_software_issue_tip
+- utter_ask_for_phone_model_for_repairs
+- action_answer_tech_term
 responses:
+  utter_ask_for_phone_model_for_repairs:
+    - text: To begin the repair request, I need you to tell me your phone model name.
+  utter_battery_issue_tip:
+    - text: It looks like you're having battery issues. Try checking for power-hungry apps, reduce screen brightness, and make sure your software is up to date. If your phone still drains too fast or shuts down unexpectedly, we can assist with a battery replacement. Would you like me to help arrange a repair?
+  utter_screen_damage_tip:
+    - text: For screen damage, please avoid further pressure on the display to prevent it from getting worse. Minor scratches may be covered with a screen protector, but cracks, flickering, or unresponsive screens usually require professional repair. Would you like to book a repair?
+  utter_connectivity_issue_tip:
+    - text: If you're having Wi-Fi or mobile data issues, try restarting your device, toggling airplane mode, or resetting network settings. Make sure you're within signal range and that your SIM or router is working correctly. Would you like help with further diagnostics or repair?
+  utter_camera_or_audio_issue_tip:
+  - text: If you're experiencing issues with your camera or audio, try restarting your phone and closing background apps. For camera problems, ensure there's no dirt or stickers covering the lens. For audio, make sure the volume is up, Bluetooth isn't connected to another device, and there's nothing blocking the speakers. If these steps don't solve the issue, it might be time for a diagnostic check. Would you like to proceed with a repair request?
+  utter_charging_issue_tip:
+    - text: For charging problems, check your cable and adapter, clean the charging port gently with a soft brush, and try another outlet or charger. If it still won’t charge or charges slowly, the port or battery may need servicing. Want to start a repair process?
+  utter_performance_issue_tip:
+    - text: If your phone is lagging or freezing, try clearing background apps, deleting unused files, and restarting it. You can also check for software updates or reset app settings. If it continues, diagnostics may be needed. Would you like repair assistance?
+  utter_software_issue_tip:
+    - text: For software issues like crashing apps, system glitches, or failed updates, try restarting your device, clearing cache/data for affected apps, or updating the OS. We can also help with a factory reset or repair if needed. Should I help arrange a repair?
   utter_ask_for_preferences:
   - text: Do you have a brand preference (Apple, Samsung, etc..)?
     buttons:
