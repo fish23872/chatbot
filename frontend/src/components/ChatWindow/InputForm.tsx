@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Button from "../Button/Button";
-import socket from "../../utils/socket";
 
 interface InputFormProps {
   onSendMessage: (message: string) => void;
@@ -12,7 +11,6 @@ const InputForm: React.FC<InputFormProps> = ({ onSendMessage }) => {
   const handleSend = () => {
     if (inputText.trim()) {
       onSendMessage(inputText);
-      socket.emit("chat_message", inputText);
       setInputText("");
     }
   };

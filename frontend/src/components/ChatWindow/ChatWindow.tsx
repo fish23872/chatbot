@@ -1,71 +1,59 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useChatSocket } from "../../hooks/useChatSocket";
 import socket from "../../utils/socket";
 import InputForm from "./InputForm";
-import { Response, MessageType } from "@types";
 import ChatMessage from "./ChatMessage";
+import { Response, MessageType } from "@types";
 
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const formatPayloadDisplayText = (payload: string): string => {
+    const cleaned = payload.replace("/pref_brand_", "");
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    const handleChatMessage = (data: string) => {
-      setMessages((prev) => [...prev, { text: data, isUser: false }]);
-    };
-
-    const handleData = (data: Response) => {
-      const firstItem = data[0];
-      if (!firstItem.custom) return;
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: firstItem.text || "",
-          isUser: false,
-          payload: firstItem.custom.data
-        }
-      ]);
-    };
-    const handleButtons = (data: Response) => {
-      setMessages(prev => [
-        ...prev,
-        {
-          isUser: false,
-          payload: undefined,
-          text: data[0].text || "",
-          buttons: data[0].buttons,
-        }
-      ]);
-    }
-
-    socket.on("buttons", handleButtons)
-    socket.on("chat_message", handleChatMessage);
-    socket.on("data", handleData);
-
-    return () => {
-      socket.off("buttons", handleButtons)
-      socket.off("chat_message", handleChatMessage);
-      socket.off("data", handleData);
-    };
+  const addMessage = useCallback((msg: MessageType) => {
+    setMessages((prev) => [...prev, msg]);
   }, []);
 
   const handleSendMessage = (message: string) => {
-    setMessages((prev) => [...prev, { text: message, isUser: true }]);
+    addMessage({ text: message, isUser: true });
+    socket.emit("chat_message", message);
   };
 
-
   const handleButtonClick = (payload: string) => {
-    const cleanedPayload = payload.replace("/pref_brand_", '');
-    const displayText = cleanedPayload.charAt(0).toUpperCase() + cleanedPayload.slice(1);
-    
-    setMessages(prev => [...prev, { text: displayText, isUser: true }]);
+    const displayText = formatPayloadDisplayText(payload);
+    addMessage({ text: displayText, isUser: true });
     socket.emit("chat_message", payload);
   };
 
-  
+  useChatSocket({
+    onChatMessage: (msg) => {
+      addMessage({ text: msg, isUser: false });
+    },
+    onData: (data: Response) => {
+      const first = data[0];
+      if (!first.custom) return;
+      addMessage({
+        text: first.text || "",
+        isUser: false,
+        payload: first.custom.data
+      });
+    },
+    onButtons: (data: Response) => {
+      addMessage({
+        text: data[0].text || "",
+        isUser: false,
+        buttons: data[0].buttons
+      });
+    }
+  });
 
   return (
     <div className="flex flex-col h-screen bg-gray-900">
