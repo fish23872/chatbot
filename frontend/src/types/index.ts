@@ -85,4 +85,5 @@ export type Phone = {
     urgency: "urgent" | "standard";
     category: PhoneIssueCategory[];
     needs_additional_info: boolean;
+    phone_model: string
   };

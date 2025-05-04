@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
       console.log('JSON payload:', JSON.stringify(payload));
   
       const endpoint = isLogin ? '/login' : '/register';
-      const response = await fetch(`http://localhost:8000${endpoint}`, {
+      const response = await fetch(`http://${window.location.hostname}:8000${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -27,6 +27,12 @@ export const RepairTicketPage: React.FC = () => {
               </p>
             </div>
             <div>
+              <h3 className="font-medium">Phone Model</h3>
+              <p className="">
+                {ticket.phone_model}
+              </p>
+            </div>
+            <div>
               <h3 className="font-medium">Issue Category</h3>
               <p>{ticket.category.join(", ")}</p>
             </div>

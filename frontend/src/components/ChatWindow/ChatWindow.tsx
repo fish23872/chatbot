@@ -58,7 +58,7 @@ const ChatWindow: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900">
+    <div className="flex flex-col h-screen bg-gray-900 max-w-screen">
       <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-gray-800 to-gray-900">
         <div className="max-w-3xl mx-auto space-y-3">
           {messages.map((msg, index) => (

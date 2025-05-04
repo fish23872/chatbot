@@ -6,6 +6,7 @@ interface Ticket {
   urgency: string;
   category: string[];
   status: string;
+  phone_model: string;
 }
 
 export const Dashboard: React.FC = () => {
@@ -51,14 +52,15 @@ export const Dashboard: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <h1>Dashboard</h1>
+    <div className='bg-gray-800 min-h-screen text-white pt-6 pl-12'>
+      <h1 className='font-medium text-5xl mb-4'>Dashboard</h1>
       <ul>
         {tickets.map(ticket => (
-          <li key={ticket.id}>
-            <h3>Ticket #{ticket.id}</h3>
+          <li key={ticket.id} className='font-medium space-y-4 mb-4 bg-gray-700 w-[35%] p-4 rounded-sm cursor-pointer'>
+            <h3 className='text-2xl text-green-500'>Ticket #{ticket.id}</h3>
             <p>Status: {ticket.status}</p>
             <p>Urgency: {ticket.urgency}</p>
+            <p>Phone Model: {ticket.phone_model}</p>
           </li>
         ))}
       </ul>

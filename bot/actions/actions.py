@@ -591,10 +591,8 @@ class ActionProcessRepairDescription(Action):
         
         prompt = f"""
         Analyze this phone repair request:
-        Device: {phone_model}
         Issue: {initial_message}
         Details: {user_message}
-
         Return JSON with:
         - "urgency": "urgent" (if unusable, e.g., won't turn on) or "standard" (minor issues).
         - "category": ["screen","battery","water","charging","other","unclear"] (pick best match).
@@ -603,10 +601,10 @@ class ActionProcessRepairDescription(Action):
         
         response = LlmActions.create_response(prompt)
         cleaned_response = response.replace('```json', '').replace('```', '').replace('\n','').strip()
-
+        
         try:
             parsed_response = json.loads(cleaned_response)
-            
+            parsed_response["phone_model"] = phone_model
             payload = {
                 "payload": "repairs",
                 "data": parsed_response 
@@ -625,11 +623,7 @@ class ActionOutOfScopeInquiry(Action):
     def name(self):
         return "action_out_of_scope_inquiry"
 
-    async def run(
-        self, 
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: dict):
+    async def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         
         user_message = tracker.latest_message.get("text")
         
@@ -675,3 +669,4 @@ class ActionSetSlotPreferredBrand(Action):
             return [SlotSet("brand_preference", brand_pref)]
         
     #TODO: Limit LLM calls
+    #TODO: Fix Recommendation

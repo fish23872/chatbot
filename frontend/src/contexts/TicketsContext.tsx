@@ -25,10 +25,11 @@ const createTicket = async (data: RepairData, customerNotes?: string, technician
       category: data.category,
       needs_additional_info: data.needs_additional_info,
       customerNotes: customerNotes || null,
-      technicianNotes: technicianNotes || null
+      technicianNotes: technicianNotes || null,
+      phone_model: data.phone_model
     };
 
-    const response = await fetch('http://localhost:8000/tickets', {
+    const response = await fetch(`http://${window.location.hostname}:8000/tickets`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +52,8 @@ const createTicket = async (data: RepairData, customerNotes?: string, technician
       status: responseData.ticket.status as "open" | "in-progress" | "completed",
       createdAt: new Date(responseData.ticket.created_at),
       customerNotes: responseData.ticket.customerNotes,
-      technicianNotes: responseData.ticket.technicianNotes
+      technicianNotes: responseData.ticket.technicianNotes,
+      phone_model: responseData.ticket.phone_model
     };
     setTickets(prev => [...prev, newTicket]);
     return newTicket;

@@ -51,7 +51,8 @@ async def get_all_tickets():
                 "id": str(ticket["_id"]),
                 "user_id": str(ticket["user_id"]),
                 "urgency": ticket["urgency"],
-                "status": ticket["status"]
+                "status": ticket["status"],
+                "phone_model": ticket["phone_model"]
             })
         return array
     except Exception as e:
@@ -60,6 +61,7 @@ async def get_all_tickets():
 
 @router.post("/tickets", response_model=dict)
 def create_ticket(ticket: RepairTicketCreateRequest, user=Depends(get_current_user)):
+    print("API request started")
     status = "open"
     ticket_data = {
         "user_id": ObjectId(user["id"]),
@@ -70,6 +72,7 @@ def create_ticket(ticket: RepairTicketCreateRequest, user=Depends(get_current_us
         "technicianNotes": ticket.technicianNotes,
         "status": status,
         "created_at": datetime.utcnow(),
+        "phone_model": ticket.phone_model
     }
 
     result = tickets.insert_one(ticket_data)
@@ -82,9 +85,10 @@ def create_ticket(ticket: RepairTicketCreateRequest, user=Depends(get_current_us
             "status": "open",
             "created_at": datetime.utcnow().isoformat(),
             "customerNotes": ticket.customerNotes,
-            "technicianNotes": ticket.technicianNotes
+            "technicianNotes": ticket.technicianNotes,
+            "phone_model": ticket.phone_model
         }
     }
-    print(response_data)
+    print(f"===== API RESPONSE ====={response_data}")
     
     return response_data
