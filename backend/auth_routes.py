@@ -61,7 +61,6 @@ async def get_all_tickets():
 
 @router.post("/tickets", response_model=dict)
 def create_ticket(ticket: RepairTicketCreateRequest, user=Depends(get_current_user)):
-    print("API request started")
     status = "open"
     ticket_data = {
         "user_id": ObjectId(user["id"]),
@@ -89,6 +88,5 @@ def create_ticket(ticket: RepairTicketCreateRequest, user=Depends(get_current_us
             "phone_model": ticket.phone_model
         }
     }
-    print(f"===== API RESPONSE ====={response_data}")
     
     return response_data

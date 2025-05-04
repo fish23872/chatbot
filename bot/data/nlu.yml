@@ -7,8 +7,36 @@ nlu:
     - What's AMOLED?
     - I don't know what refresh rate is
     - Tell me about screen resolution
+    - What does Snapdragon refer to?
     - What does IP68 mean?
     - What do you know about batteries?
+    - Can you explain what NFC is?
+    - What's the difference between LCD and OLED?
+    - What does Gorilla Glass mean?
+    - What is RAM in a phone?
+    - Could you tell me about fast charging?
+- intent: complaint
+  examples: |
+    - I'm not happy with the service
+    - This didn't help at all
+    - Your answers are useless
+    - I'm very disappointed
+    - This is frustrating
+    - You misunderstood my request
+    - I want to file a complaint
+    - The bot isn't working properly
+    - That was not helpful
+    - I'm not satisfied with this
+- intent: ask_capabilities
+  examples: |
+    - What can you do?
+    - How can you help me?
+    - What are your features?
+    - Tell me what you can do
+    - What kind of help do you offer?
+    - What are your capabilities?
+    - What services do you provide?
+    - Can you explain what you can assist with?
 - intent: cancel
   examples: |
     - Cancel my request
@@ -252,6 +280,7 @@ nlu:
     - yep
     - go ahead
     - agreed
+    - ye
 - intent: deny
   examples: |
     - no

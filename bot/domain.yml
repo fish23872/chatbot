@@ -1,6 +1,8 @@
 version: '3.1'
 intents:
 - affirm
+- complaint
+- ask_capabilities
 - battery_problem
 - connectivity_problem
 - screen_problem
@@ -150,6 +152,7 @@ actions:
 - action_ask_price
 - action_out_of_scope_inquiry
 - utter_ask_to_purchase
+- utter_ack_complaint
 - utter_redirect_for_purchase
 - utter_greet
 - utter_default
@@ -194,8 +197,21 @@ actions:
 - utter_performance_issue_tip
 - utter_software_issue_tip
 - utter_ask_for_phone_model_for_repairs
+- utter_capabilities
 - action_answer_tech_term
 responses:
+  utter_capabilities:
+  - text: |
+      I can help you with a variety of things:
+      - Recommend and compare smartphones
+      - Answer questions about phone specs, features, and reviews
+      - Assist with technical problems like battery, screen, or software issues
+      - Help you request repairs or check availability and pricing
+      - Escalate to a human agent if needed
+
+      Just tell me what you need help with!
+  utter_ack_complaint:
+  - text: I’m really sorry to hear that you’re not satisfied with the service. I completely understand your frustration, and I’d like to make it right. Could you please share more details about what went wrong, so I can assist you better or escalate the issue to a human agent?
   utter_ask_for_phone_model_for_repairs:
     - text: To begin the repair request, I need you to tell me your phone model name.
   utter_battery_issue_tip:
@@ -247,10 +263,6 @@ responses:
   - text: What is your budget?
   utter_ask_clarify_comparison:
   - text: Please give a valid name of phone models when comparing. Try "Samsung Galaxy S24" or "iPhone 13 Pro" instead.
-  utter_phone_model_not_recognized:
-  - text: I'm sorry, I couldn't recognize that phone model.
-  utter_invalid_phone_model:
-  - text: Sorry, we don't have information for this phone model.
   utter_escalate_to_human:
   - text: I am escalating your request to a human agent. Please hold on for a moment.
   utter_greet:
@@ -291,8 +303,6 @@ responses:
   - text: Great! I'll redirect you to our purchase page.
   utter_english_only:
   - text: I am an assistant for this webshop. I only understand and converse in English. Please use English as your language.
-  utter_out_of_scope_inquiry:
-  - text: Sorry, I specialize in mobile phones and can not find the phone model you're asking for. Please provide a valid phone model name when asking for a model.
   utter_offer_human_agent:
   - text: I see you're having trouble. Would you like to speak with a human agent?
   utter_happy_to_help:

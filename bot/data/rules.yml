@@ -1,6 +1,17 @@
 version: "3.1"
 
 rules:
+- rule: complaint
+  steps:
+    - intent: complaint
+    - action: utter_ack_complaint
+    - action: action_restart
+  
+- rule: answer capabilities
+  steps:
+    - intent: ask_capabilities
+    - action: utter_capabilities
+
 - rule: cancellation
   steps:
     - intent: cancel
