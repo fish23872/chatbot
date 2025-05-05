@@ -34,6 +34,25 @@ stories:
   - action: action_recommend_by_budget
   - action: action_restart
 
+- story: i want to buy phone, no amount, no brand, deny description
+  steps:
+  - intent: buy_phone
+  - action: utter_ask_for_budget
+  - intent: provide_budget
+    entities: []
+  - action: action_setslot_text_budget
+  - slot_was_set: 
+    - text_budget: something cheap
+  - action: utter_ask_for_preferences
+  - intent: pref_brand_none
+  - action: action_preferred_brand
+  - slot_was_set:
+    - brand_preference: None
+  - action: utter_ask_for_usecase_description
+  - intent: deny
+  - action: action_recommend_by_budget
+  - action: action_restart
+
 - story: i want to buy phone, xiaomi brand, deny description
   steps:
   - intent: buy_phone

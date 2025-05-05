@@ -1,5 +1,5 @@
 import pytest
-from actions.utils.phone_normalizer import PhoneNormalizer
+from bot.actions.utils.phone_normalizer import PhoneNormalizer
 
 @pytest.mark.parametrize("input_model, expected_output", [
     ("s23", "Samsung Galaxy S23"),

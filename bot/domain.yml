@@ -1,5 +1,6 @@
 version: '3.1'
 intents:
+- cancel
 - affirm
 - complaint
 - ask_capabilities
@@ -61,7 +62,12 @@ entities:
 - repair_description
 - brand_preference
 - usecase_description
+- text_budget
 slots:
+  text_budget:
+    type: text
+    mappings:
+    - type: custom
   usecase:
     type: text
     mappings:
@@ -144,6 +150,7 @@ slots:
       - active_loop: compare_phones_form
         requested_slot: phone2
 actions:
+- action_setslot_text_budget
 - action_normalize_phone_models
 - action_recommend_by_budget
 - action_normalize_phone_model
@@ -163,11 +170,8 @@ actions:
 - utter_ask_phone_model
 - utter_ask_to_purchase_either
 - utter_accept_denial_phone_purchase
-- utter_phone_model_not_recognized
-- utter_invalid_phone_model
 - utter_english_only
 - utter_offer_human_agent
-- utter_out_of_scope_inquiry
 - utter_happy_to_help
 - utter_accept_denial_help
 - utter_ask_for_repair_description

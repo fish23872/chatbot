@@ -295,8 +295,12 @@ class ActionRecommendByBudget(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         
         message = str(tracker.get_slot("amount"))
+        text_budget = str(tracker.get_slot("text_budget"))
         brand_preference = tracker.get_slot("brand_preference")
         usecase = tracker.get_slot("usecase_description")
+        
+        if text_budget:
+            message = text_budget
         
         if "premium" in message:
             return self._handle_premium(dispatcher, brand_preference, usecase)
@@ -381,6 +385,7 @@ class ActionRecommendByBudget(Action):
         return []
 
     def _handle_premium(self, dispatcher, brand_preference, usecase):
+        print(">>> Entered _handle_premium")
         query = {
             "price": {"$gte": 1000},
             "available": True
@@ -667,7 +672,16 @@ class ActionSetSlotPreferredBrand(Action):
         if user_message:
             brand_pref = str(user_message).replace("/pref_brand_", '').capitalize()
             return [SlotSet("brand_preference", brand_pref)]
-        
+
+class ActionSetSlotTextBudget(Action):
+    def name(self):
+        return "action_setslot_text_budget"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        user_message = tracker.latest_message.get("text")
+        if user_message:
+            text_budget = str(user_message)
+            return [SlotSet("text_budget", text_budget)]
     #TODO: Limit LLM calls
     #TODO: Fix Recommendation
     #TODO: Animations
