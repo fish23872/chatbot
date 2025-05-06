@@ -1,9 +1,19 @@
+export interface Ticket {
+  id: string;
+  user_id: string;
+  urgency: string;
+  category: string[];
+  status: string;
+  phone_model: string;
+}
+
 export interface RepairTicket extends RepairData {
   id: string;
   createdAt: Date;
   status: "open" | "in-progress" | "completed";
   customerNotes?: string;
   technicianNotes?: string;
+  email?: string;
 }
 
 export interface MessageType {

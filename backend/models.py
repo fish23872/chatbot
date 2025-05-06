@@ -19,3 +19,9 @@ class RepairData(BaseModel):
 class RepairTicketCreateRequest(RepairData):
     customerNotes: Optional[str] = None
     technicianNotes: Optional[str] = None
+    email: Optional[str] = None
+
+class TicketUpdateData(BaseModel):
+    email: Optional[str] = None
+    customerNotes: Optional[str] = None
+    technicianNotes: Optional[str] = None

@@ -34,7 +34,8 @@ export const RepairMessage: React.FC<RepairMessageProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-gray-700 rounded-lg p-4 my-2 max-w-3xl">
+    <div className="bg-gray-700 rounded-lg p-4 my-2 max-w-3xs">
+      <h2 className="font-medium text-green-500">Repair ticket created</h2>
       <button 
         onClick={handleCreateTicket}
         disabled={isLoading}

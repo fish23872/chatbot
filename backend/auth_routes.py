@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, Request
-from models import RegisterRequest, LoginRequest, RepairTicketCreateRequest
+from fastapi import APIRouter, HTTPException, Depends, Request, Path
+from models import RegisterRequest, LoginRequest, RepairTicketCreateRequest, TicketUpdateData
 from auth import hash_password, verify_password, create_token
 from database import Users, Tickets
 from dependencies import get_current_user
@@ -42,6 +42,54 @@ def operator_dashboard(user = Depends(get_current_user)):
         raise HTTPException(403, detail="Forbidden")
     return {"msg": "Operator dashboard", "user": user}
 
+@router.get("/tickets/{ticket_id}")
+def get_ticket_by_id(ticket_id: str, user=Depends(get_current_user)):
+    try:
+        ticket = tickets.find_one({"_id": ObjectId(ticket_id)})
+        if not ticket:
+            raise HTTPException(404, detail="Ticket not found")
+        return {
+            "id": str(ticket["_id"]),
+            "user_id": str(ticket["user_id"]),
+            "urgency": ticket["urgency"],
+            "category": ticket["category"],
+            "needs_additional_info": ticket["needs_additional_info"],
+            "customerNotes": ticket["customerNotes"],
+            "technicianNotes": ticket["technicianNotes"],
+            "status": ticket["status"],
+            "createdAt": ticket["created_at"],
+            "phone_model": ticket["phone_model"],
+            "email": ticket["email"]
+        }
+    except Exception as e:
+        print(e)
+        raise HTTPException(500, detail=str(e))
+    
+@router.patch("/tickets/{ticket_id}")
+def add_data_to_ticket(ticket_id: str, update_data: TicketUpdateData, user=Depends(get_current_user)):
+    try:
+        ticket = tickets.find_one({"_id": ObjectId(ticket_id)})
+        if not ticket:
+            raise HTTPException(status_code=404, detail="Ticket not found")
+
+        update_fields = {k: v for k, v in update_data.dict().items() if v is not None}
+
+        if not update_fields:
+            raise HTTPException(status_code=400, detail="No data provided to update")
+
+        result = tickets.update_one(
+            {"_id": ObjectId(ticket_id)},
+            {"$set": update_fields}
+        )
+        if result.modified_count == 0:
+            raise HTTPException(status_code=304, detail="Ticket was not modified")
+
+        return {"message": "Ticket updated successfully"}
+
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=f"Server error: {str(e)}")
+
 @router.get("/tickets")
 async def get_all_tickets():
     try:
@@ -71,7 +119,8 @@ def create_ticket(ticket: RepairTicketCreateRequest, user=Depends(get_current_us
         "technicianNotes": ticket.technicianNotes,
         "status": status,
         "created_at": datetime.utcnow(),
-        "phone_model": ticket.phone_model
+        "phone_model": ticket.phone_model,
+        "email": ticket.email
     }
 
     result = tickets.insert_one(ticket_data)
@@ -85,7 +134,8 @@ def create_ticket(ticket: RepairTicketCreateRequest, user=Depends(get_current_us
             "created_at": datetime.utcnow().isoformat(),
             "customerNotes": ticket.customerNotes,
             "technicianNotes": ticket.technicianNotes,
-            "phone_model": ticket.phone_model
+            "phone_model": ticket.phone_model,
+            "email": ticket.email
         }
     }
     

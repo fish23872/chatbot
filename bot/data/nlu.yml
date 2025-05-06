@@ -92,27 +92,27 @@ nlu:
     - games run very badly on my phone
 - intent: camera_or_audio_problem
   examples: |
-    - the camera doesn’t open
+    - the camera doesn't open
     - photos are coming out blurry
     - front camera isn't working
     - there's no sound in recordings
     - mic is not picking up my voice
     - speaker volume is too low
-    - I can’t hear people during calls
+    - I can't hear people during calls
     - camera app keeps crashing
 - intent: charging_problem
   examples: |
-    - phone isn’t charging
+    - phone isn't charging
     - it says charging but battery doesn't go up
     - charger keeps disconnecting
     - phone charges very slowly
     - only charges when turned off
     - charging port feels loose
     - phone heats up while charging
-    - I tried a new cable, still won’t charge
+    - I tried a new cable, still won't charge
 - intent: update_or_software_problem
   examples: |
-    - my phone won’t update
+    - my phone won't update
     - error during software update
     - update made things worse
     - system update is stuck
@@ -218,7 +218,7 @@ nlu:
 - intent: ask_price
   examples: |
     - How much is the [iPhone 13](phone_model)?
-    - What’s the price of the [Samsung Galaxy S21 Ultra](phone_model)?
+    - What's the price of the [Samsung Galaxy S21 Ultra](phone_model)?
     - How much does the [OnePlus 9 Pro](phone_model) cost?
     - Please tell me the price of the [Xiaomi Mi 10 Pro](phone_model)
     - What is the cost for the [s23 ultra](phone_model)?
@@ -226,7 +226,7 @@ nlu:
     - what is the price for the [s22](phone_model)?
     - Can you tell me the price of the [Xiaomi Mi 11](phone_model)?
     - Tell me the price of the [OnePlus 10T](phone_model).
-    - What’s the cost of the [Xiaomi Redmi Note 10](phone_model)?
+    - What's the cost of the [Xiaomi Redmi Note 10](phone_model)?
 - intent: ask_product_details
   examples: |
     - What are the specs of the [Samsung Galaxy S23 Ultra](phone_model)?

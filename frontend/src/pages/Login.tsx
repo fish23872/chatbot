@@ -91,7 +91,7 @@ const LoginPage: React.FC = () => {
         };
         const tokenData = parseJwt(data.access_token);
         console.log('User data from token:', tokenData);
-        
+        localStorage.setItem("user_role", tokenData.role);
         if (tokenData.role === 'operator') {
           navigate('/dashboard');
         } else {
