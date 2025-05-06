@@ -75,6 +75,7 @@ export const RepairTicketPage: React.FC = () => {
       }
   
       setSubmitted(true);
+      setTicket(prev => prev ? { ...prev, updatedAt: new Date().toISOString() } : prev);
       
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -116,6 +117,7 @@ export const RepairTicketPage: React.FC = () => {
       }
   
       setSubmitted(true);
+      setTicket(prev => prev ? { ...prev, updatedAt: new Date().toISOString() } : prev);
   
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -164,6 +166,12 @@ export const RepairTicketPage: React.FC = () => {
               <h3 className="font-medium">Created</h3>
               <p>{ticket.createdAt.toLocaleString()}</p>
             </div>
+            {ticket.updatedAt && (
+              <div>
+                <h3 className="font-medium">Last Updated</h3>
+                <p>{new Date(ticket.updatedAt).toLocaleString()}</p>
+              </div>
+            )}
           </div>
         </div>
         

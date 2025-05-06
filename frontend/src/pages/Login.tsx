@@ -46,9 +46,6 @@ const LoginPage: React.FC = () => {
             role: (formData as RegisterFormData).role
           };
   
-      console.log('Sending payload:', payload);
-      console.log('JSON payload:', JSON.stringify(payload));
-  
       const endpoint = isLogin ? '/login' : '/register';
       const response = await fetch(`http://${window.location.hostname}:8000${endpoint}`, {
         method: 'POST',
@@ -90,7 +87,6 @@ const LoginPage: React.FC = () => {
           }
         };
         const tokenData = parseJwt(data.access_token);
-        console.log('User data from token:', tokenData);
         localStorage.setItem("user_role", tokenData.role);
         if (tokenData.role === 'operator') {
           navigate('/dashboard');

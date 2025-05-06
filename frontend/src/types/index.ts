@@ -14,6 +14,7 @@ export interface RepairTicket extends RepairData {
   customerNotes?: string;
   technicianNotes?: string;
   email?: string;
+  updatedAt?: string;
 }
 
 export interface MessageType {
