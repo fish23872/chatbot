@@ -225,7 +225,7 @@ class ActionComparePhones(Action):
                 "name": "Score",
                 "phone1": phone1['score'],
                 "phone2": phone2['score'],
-                "winner": "phone1" if phone1['score'] > phone2['quantity'] else "phone2"
+                "winner": "phone1" if phone1['score'] > phone2['score'] else "phone2"
             }
         ]
 
