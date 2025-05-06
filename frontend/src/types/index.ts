@@ -14,6 +14,7 @@ export interface MessageType {
     title: string,
     payload: string
   }>
+  isLoading?: boolean;
 }
 
 export interface RepairMessageProps {

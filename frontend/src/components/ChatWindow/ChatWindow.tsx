@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useChatSocket } from "../../hooks/useChatSocket";
 import socket from "../../utils/socket";
@@ -5,10 +6,9 @@ import InputForm from "./InputForm";
 import ChatMessage from "./ChatMessage";
 import { Response, MessageType } from "@types";
 
-
-// TODO: fix Can't reach ticket pages on URL
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
+  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const formatPayloadDisplayText = (payload: string): string => {
@@ -26,33 +26,75 @@ const ChatWindow: React.FC = () => {
 
   const handleSendMessage = (message: string) => {
     addMessage({ text: message, isUser: true });
+    addMessage({ text: "", isLoading: true,  isUser: false});
+    setIsWaitingForResponse(true);
     socket.emit("chat_message", message);
   };
 
   const handleButtonClick = (payload: string) => {
     const displayText = formatPayloadDisplayText(payload);
     addMessage({ text: displayText, isUser: true });
+    addMessage({ text: "", isLoading: true, isUser: false});
+    setIsWaitingForResponse(true);
     socket.emit("chat_message", payload);
   };
 
   useChatSocket({
     onChatMessage: (msg) => {
-      addMessage({ text: msg, isUser: false });
+      setIsWaitingForResponse(false);
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const loadingIndex = newMessages.findIndex(m => m.isLoading);
+        if (loadingIndex !== -1) {
+          newMessages[loadingIndex] = { text: msg, isUser: false };
+        } else {
+          newMessages.push({ text: msg, isUser: false });
+        }
+        return newMessages;
+      });
     },
     onData: (data: Response) => {
+      setIsWaitingForResponse(false);
       const first = data[0];
       if (!first.custom) return;
-      addMessage({
-        text: first.text || "",
-        isUser: false,
-        payload: first.custom.data
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const loadingIndex = newMessages.findIndex(m => m.isLoading);
+        if (loadingIndex !== -1) {
+          newMessages[loadingIndex] = {
+            text: first.text || "",
+            isUser: false,
+            payload: first.custom.data
+          };
+        } else {
+          newMessages.push({
+            text: first.text || "",
+            isUser: false,
+            payload: first.custom.data
+          });
+        }
+        return newMessages;
       });
     },
     onButtons: (data: Response) => {
-      addMessage({
-        text: data[0].text || "",
-        isUser: false,
-        buttons: data[0].buttons
+      setIsWaitingForResponse(false);
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const loadingIndex = newMessages.findIndex(m => m.isLoading);
+        if (loadingIndex !== -1) {
+          newMessages[loadingIndex] = {
+            text: data[0].text || "",
+            isUser: false,
+            buttons: data[0].buttons
+          };
+        } else {
+          newMessages.push({
+            text: data[0].text || "",
+            isUser: false,
+            buttons: data[0].buttons
+          });
+        }
+        return newMessages;
       });
     }
   });

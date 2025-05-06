@@ -20,6 +20,21 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ msg, onButtonClick }) => {
     onButtonClick(payload);
   };
 
+  if (msg.isLoading) {
+    return (
+      <div className="flex items-start space-x-3 max-w-3xl">
+        <div className="w-8 h-8 rounded-full bg-gray-600 animate-pulse"></div>
+        <div className="flex-1 space-y-3">
+          <div className="h-4 bg-gray-700 rounded w-3/4 animate-pulse"></div>
+          <div className="h-4 bg-gray-700 rounded w-1/2 animate-pulse"></div>
+          <div className="mt-4 space-y-2">
+            <div className="h-32 bg-gray-700 rounded-lg animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (msg.isUser) {
     return <Message text={msg.text} isUser={true} />;
   }

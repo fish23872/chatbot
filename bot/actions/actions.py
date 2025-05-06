@@ -299,7 +299,7 @@ class ActionRecommendByBudget(Action):
         brand_preference = tracker.get_slot("brand_preference")
         usecase = tracker.get_slot("usecase_description")
         
-        if text_budget:
+        if text_budget and message is None:
             message = text_budget
         
         if "premium" in message:
