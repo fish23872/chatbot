@@ -6,12 +6,14 @@ import InputForm from "./InputForm";
 import ChatMessage from "./ChatMessage";
 import { Response, MessageType } from "@types";
 import { motion } from "framer-motion";
+import { Info } from "lucide-react";
 
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([
     { text: "👋 Welcome! Ask me anything about mobile phones.", isUser: false },
   ]);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+  const [showWelcomeCard, setShowWelcomeCard] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const formatPayloadDisplayText = (payload: string): string => {
@@ -28,6 +30,8 @@ const ChatWindow: React.FC = () => {
   }, []);
 
   const handleSendMessage = (message: string) => {
+    if (message.trim().length === 0) return;
+    setShowWelcomeCard(false);
     addMessage({ text: message, isUser: true });
     addMessage({ text: "", isLoading: true, isUser: false });
     setIsWaitingForResponse(true);
@@ -35,6 +39,7 @@ const ChatWindow: React.FC = () => {
   };
 
   const handleButtonClick = (payload: string) => {
+    setShowWelcomeCard(false);
     const displayText = formatPayloadDisplayText(payload);
     addMessage({ text: displayText, isUser: true });
     addMessage({ text: "", isLoading: true, isUser: false });
@@ -97,12 +102,75 @@ const ChatWindow: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white max-w-screen">
-      
-      <div className="bg-gray-850 text-white py-4 px-6 border-b border-gray-700 shadow sticky top-0 z-20">
+    <div className="flex flex-col h-screen  bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900  text-white max-w-screen ">
+      <div className="bg-gray-900 text-white py-4 px-6 border-b border-gray-700 shadow sticky top-0 z-20">
         <h1 className="text-xl font-semibold tracking-wide">Chat Support</h1>
       </div>
-      <div className="flex-1 overflow-y-auto bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
+      {showWelcomeCard && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="rounded-xl p-4 border border-gray-700 shadow-lg mb-6 m-4 max-w-full bg-gray-900"
+            >
+              <div className="flex items-start">
+                <div className="bg-blue-500 p-2 rounded-lg mr-3">
+                  <Info size={20} className="text-white" />
+                </div>
+                <div>
+                  <h3 className="font-medium mb-2">How can I help you today?</h3>
+                  <p className="text-gray-300 text-md mb-3">
+                    I can help with:
+                  </p>
+                  <ul className="text-md text-gray-300 space-y-1 mb-3">
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
+                      Finding the right phone for your needs
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
+                      Comparing different phone models
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
+                      Troubleshooting common issues
+                    </li>
+                    <li className="flex items-center">
+                      <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
+                      Information about repairs and warranties
+                    </li>
+                  </ul>
+                  <div className="flex flex-wrap gap-2">
+                    <button 
+                      onClick={() => handleSendMessage("I need help choosing a new phone")}
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                    >
+                      Help me choose a phone
+                    </button>
+                    <button 
+                      onClick={() => handleSendMessage("I want to compare two phones")}
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                    >
+                      Compare models
+                    </button>
+                    <button 
+                      onClick={() => handleSendMessage("I need repairs for my device")}
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                    >
+                      Technical support
+                    </button>
+                    <button 
+                      onClick={() => handleSendMessage("Are there any discounts?")}
+                      className="bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                    >
+                      Ask for discounts
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+      <div className="flex-1 overflow-y-auto p-4">
         <div className="max-w-3xl mx-auto space-y-4">
           {messages.map((msg, index) => (
             <motion.div
@@ -118,7 +186,7 @@ const ChatWindow: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      <div className="bg-gray-850 p-4 border-t border-gray-700">
+      <div className="bg-gray-850 p-4 border-t border-gray-700 bg-gray-900">
         <div className="max-w-3xl mx-auto">
           <InputForm onSendMessage={handleSendMessage} />
         </div>
