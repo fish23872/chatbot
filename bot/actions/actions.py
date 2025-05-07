@@ -385,7 +385,6 @@ class ActionRecommendByBudget(Action):
         return []
 
     def _handle_premium(self, dispatcher, brand_preference, usecase):
-        print(">>> Entered _handle_premium")
         query = {
             "price": {"$gte": 1000},
             "available": True

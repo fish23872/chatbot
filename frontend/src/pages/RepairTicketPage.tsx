@@ -185,6 +185,13 @@ export const RepairTicketPage: React.FC = () => {
             </div>
           ))}
         </div>)}
+
+        {ticket.customerNotes && role === "operator" && (
+          <div className="bg-gray-800 p-6 rounded-lg">
+            <h1 className="text-xl font-semibold mb-4">Customer Notes</h1>
+            {ticket.customerNotes}
+          </div>
+        )}
       </div>
 
       {role === "operator" && (
