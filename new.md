@@ -1,6 +1,4 @@
-- Repair
-- ticket
-- log-in
-- compare
-- dashboard
-- custom response
+- ticket custom 
+- user notes and email
+- opinion
+- Custom issue (charger not working, battery is draining)

@@ -681,9 +681,21 @@ class ActionSetSlotTextBudget(Action):
         if user_message:
             text_budget = str(user_message)
             return [SlotSet("text_budget", text_budget)]
+
+class ActionGiveOpinion(Action):
+    def name(self):
+        return "action_give_opinion"
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        phone_model = tracker.get_slot("phone_model")
+        phone_model = PhoneNormalizer.normalize(phone_model)
         
+        prompt = f"""
+        You are an expert for mobile phones.
+        User asks for your opinion on {phone_model}, answer in 3 sentences.
+        """
         
-    #TODO: Fix Recommendation
-    #TODO: Animations
-    #TODO: Human escalation
-    #TODO: Frontend styling
+        response = LlmActions.create_response(prompt=prompt)
+        
+        dispatcher.utter_message(response)
+        

@@ -355,3 +355,16 @@ nlu:
     - Should I get a cat or dog?
     - What's the weather like?
     - News about Bitcoin today
+
+- intent: ask_opinion
+  examples: |
+    - What do you think about the [samsung flip 5](phone_model)?
+    - Do you recommend the [z flip 5](phone_model)?
+    - How good is the [samsung z flip 5](phone_model)?
+    - Is the [iphone 15 pro max](phone_model) a good phone?
+    - What’s your take on the [Samsung S25 Ultra](phone_model)?
+    - I'd like your opinion on the [S25 Ultra](phone_model)
+    - Tell me your thoughts about the [Samsung Galaxy S25 Ultra](phone_model)
+    - Do you like the [S25 Ultra](phone_model)?
+    - Is the [Galaxy S25 Ultra](phone_model) worth buying?
+    - How does the [Samsung S25 Ultra](phone_model) compare to other phones?

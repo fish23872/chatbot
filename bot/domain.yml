@@ -1,6 +1,7 @@
 version: '3.1'
 intents:
 - cancel
+- ask_opinion
 - affirm
 - complaint
 - ask_capabilities
@@ -174,6 +175,7 @@ actions:
 - utter_offer_human_agent
 - utter_happy_to_help
 - utter_accept_denial_help
+- action_give_opinion
 - utter_ask_for_repair_description
 - action_base
 - validate_compare_phones_form

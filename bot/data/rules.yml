@@ -6,6 +6,12 @@ rules:
     - intent: complaint
     - action: utter_ack_complaint
     - action: action_restart
+
+- rule: give opinion
+  steps: 
+    - intent: ask_opinion
+    - action: action_give_opinion
+    - action: action_restart
   
 - rule: answer capabilities
   steps:
