@@ -77,7 +77,12 @@ const getTicket = async (id: string): Promise<RepairTicket | undefined> => {
         "Content-Type": "application/json"
       }
     });
-    if (!res.ok) return undefined;
+    if (!res.ok) {
+    const errorData = await res.json();
+    console.log("ERROR:", errorData);
+    throw new Error(JSON.stringify(errorData));
+}
+
     const data = await res.json();
 
     const loaded: RepairTicket = {

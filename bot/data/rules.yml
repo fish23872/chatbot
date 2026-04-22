@@ -93,7 +93,7 @@ rules:
 
 - rule: Activate comparison form
   steps:
-  - intent: compare_phones_form_starter
+  - intent: compare_phones
   - action: compare_phones_form
   - active_loop: compare_phones_form
 
@@ -105,26 +105,6 @@ rules:
   - action: action_listen
   - action: action_process_repair_description
 
-- rule: handle no recognition for comparison
-  steps:
-    - intent: compare_phones
-      entities: []
-    - action: utter_ask_clarify_comparison
-
-- rule: compare two phones successfully
-  steps:
-  - intent: compare_phones
-    entities:
-    - phone_model
-    - phone_model
-  - action: action_normalize_phone_models
-  - slot_was_set:
-    - phone1
-  - slot_was_set:
-    - phone2
-  - action: action_compare_phones
-  - active_loop: null 
-  - action: action_restart
 
 - rule: Submit comparison form
   condition:
@@ -132,8 +112,5 @@ rules:
   steps:
   - action: compare_phones_form
   - active_loop: null
-  - slot_was_set:
-    - requested_slot: null
   - action: action_compare_phones
-  - active_loop: null
   - action: action_restart

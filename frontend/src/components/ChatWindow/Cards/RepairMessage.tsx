@@ -18,7 +18,6 @@ export const RepairMessage: React.FC<RepairMessageProps> = ({ data }) => {
       if (!ticket) {
         throw new Error('Ticket creation returned null');
       }
-      
       if (!('id' in ticket)) {
         throw new Error('Created ticket is missing id property');
       }

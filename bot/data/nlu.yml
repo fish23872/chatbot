@@ -171,26 +171,27 @@ nlu:
     - lightweight
     - 5G capability
     - durable build
-- intent: compare_phones_form_starter
+- intent: compare_phones
   examples: |
+    - Compare [iPhone 15](phone_model) and [Samsung S23](phone_model)
+    - Differences between [OnePlus 11](phone_model) vs [Xiaomi 13](phone_model)
+    - [Galaxy S23](phone_model) versus [iPhone 15 Pro](phone_model)
+    - Show me the differences between [iPhone 13](phone_model) vs [Xiaomi Redmi Note 12 Pro](phone_model)
+    - Compare [Samsung S22](phone_model) with [iPhone 14](phone_model)
+    - What's better: [Xiaomi 13T](phone_model) or [OnePlus 11](phone_model)?
+    - Can you give me a comparison between [s22](phone_model) and [iphone 13](phone_model)
+    - Can you compare the [s25](phone_model) and [iphone 13](phone_model)
+    - Comparison between the [OnePlus 8 Pro](phone_model) and the [OnePlus Nord 3](phone_model)
+    - compare samsung galaxy a14
+    - i want to compare samsung galaxy a14
+    - compare this phone samsung a14
+    - can you compare samsung a14
+    - compare galaxy a14
     - Can you compare two models for me
     - I want to compare to phones
     - Compare two models
     - Compare
     - i want to see the differences between two models
-- intent: compare_phones
-  examples: |
-    - Compare [iPhone 15](phone_model) and [Samsung S23](phone_model)
-    - How does [Samsung Galaxy Z Fold 5](phone_model) compare to [iPhone 14](phone_model)?
-    - Differences between [OnePlus 11](phone_model) vs [Xiaomi 13](phone_model)
-    - [Galaxy S23](phone_model) versus [iPhone 15 Pro](phone_model)
-    - Show me the differences between [iPhone 13](phone_model) vs [Xiaomi Redmi Note 12 Pro](phone_model)
-    - Compare [Samsung S22](phone_model) with [iPhone 14](phone_model)
-    - Compare [Samsung Galaxy A14](phone_model) with the [Xiaomi Redmi 12C](phone_model)
-    - What's better: [Xiaomi 13T](phone_model) or [OnePlus 11](phone_model)?
-    - Can you give me a comparison between [s22](phone_model) and [iphone 13](phone_model)
-    - Can you compare the [s25](phone_model) and [iphone 13](phone_model)
-    - Comparison between the [OnePlus 8 Pro](phone_model) and the [OnePlus Nord 3](phone_model)
 - intent: ask_reviews
   examples: |
     - What do customers say about the [iPhone 13 Pro Max](phone_model)?

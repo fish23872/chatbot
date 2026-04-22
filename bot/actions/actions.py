@@ -263,10 +263,13 @@ class ActionNormalizePhoneModels(Action):
         if len(entities) == 0:
             dispatcher.utter_message("Please specify two phone models to compare, like: 'Compare iPhone 15 and Samsung S23'")
             return []
-            
+                    
         elif len(entities) == 1:
-            dispatcher.utter_message(f"I found '{entities[0]['value']}' to be a valid model but need another phone to compare. Please specify two models.")
-            return []
+            phone1 = PhoneNormalizer.normalize(entities[0]["value"])
+            dispatcher.utter_message(
+                f"I found '{entities[0]['value']}' to be a valid model but need another phone to compare."
+            )
+            return [SlotSet("phone1", phone1)]
 
         try:
             phone1 = entities[0]["value"]
@@ -698,4 +701,24 @@ class ActionGiveOpinion(Action):
         response = LlmActions.create_response(prompt=prompt)
         
         dispatcher.utter_message(response)
-        
+class ActionSetSecondPhone(Action):
+    def name(self):
+        return "action_set_second_phone"
+
+    def run(self, dispatcher, tracker, domain):
+        phone1 = tracker.get_slot("phone1")
+        phone_model = next(tracker.get_latest_entity_values("phone_model"), None)
+
+        if not phone1:
+            return []
+
+        if not phone_model:
+            dispatcher.utter_message("Please provide a second phone.")
+            return []
+
+        phone2 = PhoneNormalizer.normalize(phone_model)
+
+        return [
+            SlotSet("phone2", phone2),
+            FollowupAction("action_compare_phones")
+        ]
