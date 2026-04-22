@@ -1,15 +1,16 @@
 from openai import OpenAI
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
-openai_api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=openai_api_key)
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError("OPENAI_API_KEY is not set")
+
+client = OpenAI(api_key=api_key)
 
 class LlmActions:
     def create_response(prompt):
         response = client.responses.create(
-            model="gpt-4o-mini",
+            model="gpt-5.4-nano",
             input=prompt,
         )
         return response.output_text

@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
     "baseUrl": "src",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@types": ["types/index.ts"],
       "@utils": ["utils/*"],

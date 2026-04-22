@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useChatSocket } from "../../hooks/useChatSocket";
 import socket from "../../utils/socket";
@@ -144,24 +143,28 @@ const ChatWindow: React.FC = () => {
                     <button 
                       onClick={() => handleSendMessage("I need help choosing a new phone")}
                       className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                      disabled={isWaitingForResponse}
                     >
                       Help me choose a phone
                     </button>
                     <button 
                       onClick={() => handleSendMessage("I want to compare two phones")}
                       className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                      disabled={isWaitingForResponse}
                     >
                       Compare models
                     </button>
                     <button 
                       onClick={() => handleSendMessage("I need repairs for my device")}
                       className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                      disabled={isWaitingForResponse}
                     >
                       Technical support
                     </button>
                     <button 
                       onClick={() => handleSendMessage("Are there any discounts?")}
                       className="bg-green-600 hover:bg-green-700 text-white text-sm py-1.5 px-3 rounded-full transition-colors"
+                      disabled={isWaitingForResponse}
                     >
                       Ask for discounts
                     </button>
@@ -188,7 +191,7 @@ const ChatWindow: React.FC = () => {
       </div>
       <div className="bg-gray-850 p-4 border-t border-gray-700 bg-gray-900">
         <div className="max-w-3xl mx-auto">
-          <InputForm onSendMessage={handleSendMessage} />
+          <InputForm onSendMessage={handleSendMessage} disabled={isWaitingForResponse} />
         </div>
       </div>
     </div>

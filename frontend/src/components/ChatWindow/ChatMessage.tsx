@@ -59,7 +59,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ msg, onButtonClick }) => {
             <img
               src={bot}
               alt="Bot"
-              className="w-full h-full object-cover"
+              className=""
             />
           </div>
           <div className="flex-1">

@@ -3,13 +3,14 @@ import Button from "../Button/Button";
 
 interface InputFormProps {
   onSendMessage: (message: string) => void;
+  disabled?: boolean;
 }
 
-const InputForm: React.FC<InputFormProps> = ({ onSendMessage }) => {
+const InputForm: React.FC<InputFormProps> = ({ onSendMessage, disabled = false }) => {
   const [inputText, setInputText] = useState("");
 
   const handleSend = () => {
-    if (inputText.trim()) {
+    if (inputText.trim() && !disabled) {
       onSendMessage(inputText);
       setInputText("");
     }
@@ -33,11 +34,13 @@ const InputForm: React.FC<InputFormProps> = ({ onSendMessage }) => {
         placeholder="Type your message..."
         onKeyDown={handleKeyDown}
         autoFocus
+        disabled={disabled}
       />
       <Button 
         buttonText="Send" 
         onClick={handleSend}
         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        disabled={disabled}
       />
     </div>
   );
